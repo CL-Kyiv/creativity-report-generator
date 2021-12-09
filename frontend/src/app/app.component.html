@@ -1,0 +1,27 @@
+
+<div *ngIf="isGenerate; else isNotGenerate">
+  <ag-grid-angular
+      class = "ag-theme-balham ag-grid"
+      [columnDefs] = "columnDefs"
+      [rowData] = "rowData"
+      [rowHeight] = "50"
+      (gridReady) = "onGridReady($event)"
+  ></ag-grid-angular>
+</div>
+<ng-template #isNotGenerate>
+  <div class="row">
+    <div class="col">
+      <label for="sdate">Start date:</label>
+      <input type="text" id="sdate" name="sdate"><br><br>
+    </div>
+    <div class="col">
+      <label for="edate">End date:</label>
+      <input type="text" id="edate" name="edate"><br><br>
+    </div>
+    <div class="col">
+      <label for="sdate">Start date:</label>
+      <input type="text" id="sdate" name="sdate"><br><br>
+    </div>
+  </div>
+  <button class="button-generate" (click)="onGenerate()">Generate</button>   
+</ng-template>
