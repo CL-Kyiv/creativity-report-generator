@@ -1,3 +1,5 @@
+using CreativityReportGenerator.Services;
+using CreativityReportGenerator.Services.Abstractions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -29,6 +31,8 @@ namespace CreativityReportGenerator.WebAPI
             });
 
             services.AddControllers();
+
+            services.AddScoped<ICreativityReportGeneratorService, CreativityReportGenaratorService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -52,4 +56,5 @@ namespace CreativityReportGenerator.WebAPI
                 endpoints.MapControllers();
             });
         }
+    }
 }
