@@ -5,7 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
+    <ProjectReference Include="..\CreativityReportGenerator.Services.Abstractions\CreativityReportGenerator.Services.Abstractions.csproj" />
+    <ProjectReference Include="..\CreativityReportGenerator.Services\CreativityReportGenerator.Services.csproj" />
   </ItemGroup>
 
 
