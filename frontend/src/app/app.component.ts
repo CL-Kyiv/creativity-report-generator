@@ -28,6 +28,7 @@ export class AppComponent {
       field: 'startDate',
       editable: false,
       width: 10,
+      checkboxSelection: true,
     },
     {
       headerName: 'End date',
