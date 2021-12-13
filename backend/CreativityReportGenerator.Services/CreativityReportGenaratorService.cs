@@ -11,21 +11,21 @@ namespace CreativityReportGenerator.Services
 {
     public class CreativityReportGenaratorService : ICreativityReportGeneratorService
     {
-        public List<CreativityReportItem> GetCreativityReports(GetCreativityReportsRequestData requestData)
+        public List<CreativityReportItem> GetCreativityReportItems(DateTime startDate, DateTime endDate, string userName)
         {
             using (var repo = new Repository("D:\\Work\\Project\\creativity-report-generator"))
             {
                 return repo.Commits
-                    .Where(com => com.Author.Name == requestData.UserName && 
-                        com.Author.When > requestData.StartDate && 
-                        com.Author.When < requestData.EndDate)
+                    .Where(com => com.Author.Name == userName && 
+                        com.Author.When > startDate && 
+                        com.Author.When < endDate)
                     .Select(com => new CreativityReportItem 
                         { 
                             StartDate = com.Author.When.ToString("yyyy-MM-dd"), 
                             EndDate = com.Author.When.ToString("yyyy-MM-dd"), 
                             CommitId = com.Sha, Comment = com.Message, 
-                            UserName = requestData.UserName 
-                        })
+                            UserName = userName
+                    })
                     .ToList();
             }
         }

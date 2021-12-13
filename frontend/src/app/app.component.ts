@@ -1,7 +1,9 @@
 import { Component } from '@angular/core';
 import { ColDef } from 'ag-grid-community';
-import { Subject } from 'rxjs';
+import { Observable } from 'rxjs';
 import { GridApi } from 'ag-grid-community';
+import { CreativityReportItem } from './creativity-report-item';
+import { CreativityReportGeneratorService } from './creativity-report-generator.service'
 
 @Component({
   selector: 'app-root',
@@ -11,15 +13,14 @@ import { GridApi } from 'ag-grid-community';
 export class AppComponent {
   private gridApi: GridApi;
 
-  constructor(
-  ) {}
+  constructor(private service: CreativityReportGeneratorService) {}
 
   onGridReady(params: any) {
     this.gridApi = params.api;
     this.gridApi.sizeColumnsToFit();
   }
 
-  rowData = [];
+  rowData$: Observable<CreativityReportItem[]>;
 
   columnDefs: ColDef[] = [
     {
@@ -29,8 +30,8 @@ export class AppComponent {
       width: 10,
     },
     {
-      headerName: 'Edit date',
-      field: 'editDate',
+      headerName: 'End date',
+      field: 'endDate',
       editable: false,
       width: 10,
     },
@@ -56,7 +57,8 @@ export class AppComponent {
 
   isGenerate : boolean = false;
 
-  onGenerate(){
+  onGenerate(startDate : string, endDate : string, userName :  string){
+    this.rowData$ = this.service.getCreativityReportItems(startDate, endDate, userName);
     this.isGenerate = true;
   }
 }
