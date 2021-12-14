@@ -1,5 +1,14 @@
 
-<div *ngIf="isGenerate; else isNotGenerate">
+<div>
+  <label for="date">Select month and year:</label>
+  <input type="month" id="date"  #date name="date"><br><br>
+  <label for="uname">User name:</label>
+  <input type="text" id="uname"  #userName name="uname"><br><br>
+</div>
+<button class="button-generate" (click)="onGenerate(date.value, userName.value)">Generate</button>   
+
+
+<div *ngIf="isGenerate">
   <ag-grid-angular
       class = "ag-theme-balham ag-grid"
       [columnDefs] = "columnDefs"
@@ -10,20 +19,3 @@
       (gridReady) = "onGridReady($event)"
   ></ag-grid-angular>
 </div>
-<ng-template #isNotGenerate>
-  <div class="row">
-    <div class="col">
-      <label for="sdate">Start date:</label>
-      <input type="date" id="sdate"  #startDate name="sdate"><br><br>
-    </div>
-    <div class="col">
-      <label for="edate">End date:</label>
-      <input type="date" id="edate"  #endDate name="edate"><br><br>
-    </div>
-    <div class="col">
-      <label for="uname">User name:</label>
-      <input type="text" id="uname"  #userName name="uname"><br><br>
-    </div>
-  </div>
-  <button class="button-generate" (click)="onGenerate(startDate.value, endDate.value, userName.value)">Generate</button>   
-</ng-template>

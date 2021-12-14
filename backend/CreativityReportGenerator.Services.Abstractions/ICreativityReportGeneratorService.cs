@@ -8,6 +8,6 @@ namespace CreativityReportGenerator.Services.Abstractions
 {
     public interface ICreativityReportGeneratorService
     {
-        List<CreativityReportItem> GetCreativityReportItems(DateTime startDate, DateTime endDate, string userName);
+        List<CreativityReportItem> GetCreativityReportItems(DateTime date, string userName);
     }
 }

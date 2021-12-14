@@ -14,10 +14,9 @@ export class CreativityReportGeneratorService {
   
   constructor(private http: HttpClient) {}
 
-  getCreativityReportItems(startDate : string, endDate : string, userName :  string): Observable<CreativityReportItem[]> {
+  getCreativityReportItems(date : string, userName :  string): Observable<CreativityReportItem[]> {
     let params = new HttpParams();
-    params = params.append('startDate', startDate);
-    params = params.append('endDate', endDate);
+    params = params.append('date', date);;
     params = params.append('userName', userName);
     
     return this.http.get<CreativityReportItem[]>(this.APIUrl, { params: params, responseType: 'json'} );
