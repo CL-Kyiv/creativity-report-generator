@@ -58,8 +58,8 @@ export class AppComponent {
 
   isGenerate : boolean = false;
 
-  onGenerate(startDate : string, endDate : string, userName :  string){
-    this.rowData$ = this.service.getCreativityReportItems(startDate, endDate, userName);
+  onGenerate(date : string, userName :  string){
+    this.rowData$ = this.service.getCreativityReportItems(date, userName);
     this.isGenerate = true;
   }
 }

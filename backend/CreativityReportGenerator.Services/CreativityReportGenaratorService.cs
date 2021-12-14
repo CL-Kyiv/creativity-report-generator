@@ -11,8 +11,10 @@ namespace CreativityReportGenerator.Services
 {
     public class CreativityReportGenaratorService : ICreativityReportGeneratorService
     {
-        public List<CreativityReportItem> GetCreativityReportItems(DateTime startDate, DateTime endDate, string userName)
+        public List<CreativityReportItem> GetCreativityReportItems(DateTime date, string userName)
         {
+            DateTime startDate = new DateTime(date.Year, date.Month, 1);
+            DateTime endDate = new DateTime(date.Year, date.Month, DateTime.DaysInMonth(date.Year, date.Month));
             using (var repo = new Repository("D:\\Work\\Project\\creativity-report-generator"))
             {
                 return repo.Commits
@@ -22,8 +24,10 @@ namespace CreativityReportGenerator.Services
                     .Select(com => new CreativityReportItem 
                         { 
                             StartDate = com.Author.When.ToString("yyyy-MM-dd"), 
-                            EndDate = com.Author.When.ToString("yyyy-MM-dd"), 
-                            CommitId = com.Sha, Comment = com.Message, 
+                            EndDate = com.Author.When.ToString("yyyy-MM-dd"),
+                            ProjectName = repo.Info.WorkingDirectory.Split("\\")[^2],
+                            CommitId = com.Sha, 
+                            Comment = com.Message, 
                             UserName = userName
                     })
                     .ToList();
