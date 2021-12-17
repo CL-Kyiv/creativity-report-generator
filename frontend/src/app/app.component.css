@@ -1,12 +1,23 @@
 .ag-grid{
+    margin-left: 5%;
     width: 80%; 
-    height: 900px; 
+    height: 600px; 
     font-size: 20px;
-    margin-top: 5%;
+    margin-top: 3%;
 }
 .button-generate{
-    margin-left: 1%;
-    margin-top: 1%;
+    margin-top: 0.5%;
     height:50px; 
     width:100px;
+}
+.button-export{
+    margin-left: 75%;
+    margin-top: 1%;
+    height:50px; 
+    width:200px;
+}
+.input-div {
+    font-size: 20px;
+    margin-left: 2%;
+    margin-top: 2%;
 }
