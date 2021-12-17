@@ -65,4 +65,8 @@ export class AppComponent {
     this.rowData$ = this.service.getCreativityReportItems(date, userName);
     this.isGenerate = true;
   }
+
+  onBtnExport(){
+    this.gridApi.exportDataAsCsv({onlySelected: true});
+  }
 }

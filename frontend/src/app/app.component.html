@@ -1,13 +1,17 @@
 
-<div>
-  <label for="date">Select month and year:</label>
-  <input type="month" id="date"  #date name="date"><br><br>
-  <label for="nauthor">Select author:</label>
-  <select  name="nauthor" #nauthor>
-    <option *ngFor="let author of $allAuthors | async" [value]="author">{{author}}</option>
-  </select>
-</div>
-<button class="button-generate" (click)="onGenerate(date.value, nauthor.value)">Generate</button>   
+<div class="input-div">
+  <div>
+    <label for="date">Select month and year:</label>
+    <input type="month" id="date"  #date name="date"><br><br>
+    <label for="nauthor">Select author:</label>
+    <select  name="nauthor" #nauthor>
+      <option *ngFor="let author of $allAuthors | async" [value]="author">{{author}}</option>
+    </select>
+  </div>
+  <div>
+    <button class="button-generate" (click)="onGenerate(date.value, nauthor.value)">Generate</button> 
+  </div>
+</div>  
 
 
 <div *ngIf="isGenerate">
@@ -20,4 +24,8 @@
       [suppressRowClickSelection] = "true"
       (gridReady) = "onGridReady($event)"
   ></ag-grid-angular>
+
+  <div>
+    <button class="button-export" (click)="onBtnExport()">Download CSV export file</button>
+  </div>
 </div>
