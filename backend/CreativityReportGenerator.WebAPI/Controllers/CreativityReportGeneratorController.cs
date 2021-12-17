@@ -19,6 +19,12 @@ namespace CreativityReportGenerator.WebAPI.Controllers
             _creativityReportGeneratorService = creativityReportGeneratorService;
         }
 
+        [HttpGet("authors")]
+        public IActionResult GetAllAuthors()
+        {
+            return Ok(_creativityReportGeneratorService.GetAllAuthors());
+        }
+
         [HttpGet]
         public IActionResult GetCreativityReportItems(DateTime date, string userName)
         {

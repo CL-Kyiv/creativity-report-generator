@@ -21,4 +21,8 @@ export class CreativityReportGeneratorService {
     
     return this.http.get<CreativityReportItem[]>(this.APIUrl, { params: params, responseType: 'json'} );
   }
+
+  getAllAuthors(): Observable<string[]> {
+    return this.http.get<string[]>(this.APIUrl + '/authors', { responseType: 'json'} );
+  }
 }
