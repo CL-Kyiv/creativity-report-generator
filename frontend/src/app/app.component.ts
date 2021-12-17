@@ -12,8 +12,11 @@ import { CreativityReportGeneratorService } from './creativity-report-generator.
 })
 export class AppComponent {
   private gridApi: GridApi;
+  $allAuthors : Observable<string[]>;
 
-  constructor(private service: CreativityReportGeneratorService) {}
+  constructor(private service: CreativityReportGeneratorService) {
+    this.$allAuthors = this.service.getAllAuthors();
+  }
 
   onGridReady(params: any) {
     this.gridApi = params.api;

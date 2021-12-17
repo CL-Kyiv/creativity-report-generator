@@ -11,6 +11,13 @@ namespace CreativityReportGenerator.Services
 {
     public class CreativityReportGenaratorService : ICreativityReportGeneratorService
     {
+        public List<string> GetAllAuthors()
+        {
+            using (var repo = new Repository("D:\\Work\\Project\\creativity-report-generator"))
+            {
+                return repo.Commits.Select(com => com.Author.Name).Distinct().ToList();
+            }
+        }
         public List<CreativityReportItem> GetCreativityReportItems(DateTime date, string userName)
         {
             DateTime startDate = new DateTime(date.Year, date.Month, 1);
