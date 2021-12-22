@@ -1,5 +1,14 @@
+<div class="input-div" *ngIf="!isPathSelected">
+  <div>
+    <label for="path">Enter path:</label>
+    <input type="text" id="path"  #path name="path"><br><br>
+  </div>
+  <div>
+    <button class="button-select-path" (click)="onSelectPath(path.value)">Select Path</button> 
+  </div>
+</div>  
 
-<div class="input-div">
+<div class="input-div" *ngIf="isPathSelected">
   <div>
     <label for="date">Select month and year:</label>
     <input type="month" id="date"  #date name="date"><br><br>
@@ -9,6 +18,7 @@
     </select>
   </div>
   <div>
+    <button class="button-select-another-path" (click)="onSelectAnotherPath()">Select another path</button> 
     <button class="button-generate" (click)="onGenerate(date.value, nauthor.value)">Generate</button> 
   </div>
 </div>  
@@ -26,6 +36,7 @@
   ></ag-grid-angular>
 
   <div>
+    <button class="button-create-column" (click)="openAddDialog()">Create new column</button>
     <button class="button-export" (click)="onBtnExport()">Download CSV export file</button>
   </div>
 </div>

@@ -1,17 +1,18 @@
 .ag-grid{
-    margin-left: 5%;
-    width: 80%; 
+    margin-left: 1%;
+    width: 90%; 
     height: 600px; 
     font-size: 20px;
     margin-top: 3%;
 }
 .button-generate{
-    margin-top: 0.5%;
+    margin-top:  1%;
+    margin-left: 1%;
     height:50px; 
     width:100px;
 }
 .button-export{
-    margin-left: 75%;
+    margin-left: 1%;
     margin-top: 1%;
     height:50px; 
     width:200px;
@@ -20,4 +21,20 @@
     font-size: 20px;
     margin-left: 2%;
     margin-top: 2%;
+}
+.button-create-column{
+    margin-left: 65%;
+    margin-top: 1%;
+    height:50px; 
+    width:200px;
+}
+.button-select-path{
+    margin-top: 0.5%;
+    height:50px; 
+    width:150px;
+}
+.button-select-another-path{
+    margin-top:1%;
+    height:50px; 
+    width:200px;
 }

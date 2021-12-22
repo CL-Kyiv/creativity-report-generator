@@ -14,15 +14,18 @@ export class CreativityReportGeneratorService {
   
   constructor(private http: HttpClient) {}
 
-  getCreativityReportItems(date : string, userName :  string): Observable<CreativityReportItem[]> {
+  getCreativityReportItems(date : string, userName :  string, path : string): Observable<CreativityReportItem[]> {
     let params = new HttpParams();
-    params = params.append('date', date);;
+    params = params.append('date', date);
     params = params.append('userName', userName);
+    params = params.append('path', path);
     
     return this.http.get<CreativityReportItem[]>(this.APIUrl, { params: params, responseType: 'json'} );
   }
 
-  getAllAuthors(): Observable<string[]> {
-    return this.http.get<string[]>(this.APIUrl + '/authors', { responseType: 'json'} );
+  getAllAuthors(path : string): Observable<string[]> {
+    let params = new HttpParams();
+    params = params.append('path', path);
+    return this.http.get<string[]>(this.APIUrl + '/authors', { params: params, responseType: 'json'} );
   }
 }

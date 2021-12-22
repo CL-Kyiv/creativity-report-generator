@@ -11,18 +11,18 @@ namespace CreativityReportGenerator.Services
 {
     public class CreativityReportGenaratorService : ICreativityReportGeneratorService
     {
-        public List<string> GetAllAuthors()
+        public List<string> GetAllAuthors(string path)
         {
-            using (var repo = new Repository("D:\\Work\\Project\\creativity-report-generator"))
+            using (var repo = new Repository(path))
             {
                 return repo.Commits.Select(com => com.Author.Name).Distinct().ToList();
             }
         }
-        public List<CreativityReportItem> GetCreativityReportItems(DateTime date, string userName)
+        public List<CreativityReportItem> GetCreativityReportItems(DateTime date, string userName, string path)
         {
             DateTime startDate = new DateTime(date.Year, date.Month, 1);
             DateTime endDate = new DateTime(date.Year, date.Month, DateTime.DaysInMonth(date.Year, date.Month));
-            using (var repo = new Repository("D:\\Work\\Project\\creativity-report-generator"))
+            using (var repo = new Repository(path))
             {
                 return repo.Commits
                     .Where(com => com.Author.Name == userName && 
