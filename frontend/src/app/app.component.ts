@@ -1,9 +1,11 @@
 import { Component } from '@angular/core';
 import { ColDef } from 'ag-grid-community';
-import { Observable } from 'rxjs';
+import { filter, Observable } from 'rxjs';
 import { GridApi } from 'ag-grid-community';
 import { CreativityReportItem } from './creativity-report-item';
+import { MatDialog } from '@angular/material/dialog';
 import { CreativityReportGeneratorService } from './creativity-report-generator.service'
+import { ColumnAddDialogComponent } from './column-add-dialog.component/column-add-dialog.component';
 
 @Component({
   selector: 'app-root',
@@ -13,14 +15,15 @@ import { CreativityReportGeneratorService } from './creativity-report-generator.
 export class AppComponent {
   private gridApi: GridApi;
   $allAuthors : Observable<string[]>;
+  path : string;
 
-  constructor(private service: CreativityReportGeneratorService) {
-    this.$allAuthors = this.service.getAllAuthors();
+  constructor(private service: CreativityReportGeneratorService,
+    private matDialog: MatDialog) {
   }
+  
 
   onGridReady(params: any) {
     this.gridApi = params.api;
-    this.gridApi.sizeColumnsToFit();
   }
 
   rowData$: Observable<CreativityReportItem[]>;
@@ -30,43 +33,82 @@ export class AppComponent {
       headerName: 'Start date',
       field: 'startDate',
       editable: false,
-      width: 10,
+      minWidth : 50,
+      flex : 1,
       checkboxSelection: true,
     },
     {
       headerName: 'End date',
       field: 'endDate',
       editable: false,
-      width: 10,
+      minWidth : 50,
+      flex : 1,
     },
     {
       headerName: 'Project Name',
       field: 'projectName',
       editable: false,
-      width: 10,
+      minWidth : 70,
+      flex : 1.5
     },
     {
       headerName: 'Commit ID',
       field: 'commitId',
       editable: false,
-      width: 30,
+      minWidth : 100,
+      flex : 2.5
     },
     {
       headerName: 'Comment',
       field: 'comment',
       editable: false,
-      width: 40,
+      minWidth : 200,
+      flex : 4  
     },
   ];
 
   isGenerate : boolean = false;
 
+  isPathSelected : boolean = false;
+
+  onSelectPath(path : string){
+    this.path = path;
+    this.$allAuthors = this.service.getAllAuthors(path);
+    this.isPathSelected = true;
+  }
+
+  onSelectAnotherPath(){
+    this.isPathSelected = false;
+  }
+
+
   onGenerate(date : string, userName :  string){
-    this.rowData$ = this.service.getCreativityReportItems(date, userName);
+    this.rowData$ = this.service.getCreativityReportItems(date, userName, this.path);
     this.isGenerate = true;
   }
 
   onBtnExport(){
     this.gridApi.exportDataAsCsv({onlySelected: true});
   }
+
+  openAddDialog() {
+    const dialogRef = this.matDialog.open(ColumnAddDialogComponent, {
+      height: '200px',
+      width: '350px',
+    });
+    dialogRef.afterClosed().pipe(filter(r => r.isAdded)).subscribe((r) => {
+      this.onAddColumn(r.headerName);
+    });
+  }
+
+  onAddColumn(headerName : string){
+    this.columnDefs = this.columnDefs.concat([
+      {
+        headerName : headerName,
+        field : headerName.toLocaleLowerCase(),
+        minWidth : 50,
+        editable: true,
+        flex : 1
+      }]);
+    }
 }

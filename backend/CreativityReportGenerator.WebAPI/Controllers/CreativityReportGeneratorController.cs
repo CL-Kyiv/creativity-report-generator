@@ -20,15 +20,15 @@ namespace CreativityReportGenerator.WebAPI.Controllers
         }
 
         [HttpGet("authors")]
-        public IActionResult GetAllAuthors()
+        public IActionResult GetAllAuthors(string path)
         {
-            return Ok(_creativityReportGeneratorService.GetAllAuthors());
+            return Ok(_creativityReportGeneratorService.GetAllAuthors(path));
         }
 
         [HttpGet]
-        public IActionResult GetCreativityReportItems(DateTime date, string userName)
+        public IActionResult GetCreativityReportItems(DateTime date, string userName, string path)
         {
-            return Ok(_creativityReportGeneratorService.GetCreativityReportItems(date, userName));
+            return Ok(_creativityReportGeneratorService.GetCreativityReportItems(date, userName, path));
         }
     }
 }

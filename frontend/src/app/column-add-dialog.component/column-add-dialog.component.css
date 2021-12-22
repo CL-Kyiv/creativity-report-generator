@@ -1,0 +1,19 @@
+
+.button-add-column{
+    margin-left: 10%;
+    margin-top: 1%;
+    height: 45px; 
+    width:125px;
+}
+.button-close-editind{
+    margin-left: 3%;
+    margin-top: 1%;
+    height: 45px; 
+    width: 100px;
+}
+input{
+    font-size: 20px;
+}
+label{
+    font-size: 20px;
+}
