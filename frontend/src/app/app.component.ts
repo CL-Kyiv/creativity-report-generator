@@ -22,7 +22,6 @@ export class AppComponent {
     private matDialog: MatDialog) {
   }
   
-
   onGridReady(params: any) {
     this.gridApi = params.api;
   }
@@ -98,12 +97,23 @@ export class AppComponent {
 
   onAddColumn(headerName : string){
     this.columnDefs = this.columnDefs.concat([
-      {
-        headerName : headerName,
-        field : headerName.toLocaleLowerCase(),
-        minWidth : 50,
-        editable: true,
-        flex : 1
-      }]);
-    }
+    {
+      headerName : headerName,
+      field : headerName.toLocaleLowerCase(),
+      minWidth : 50,
+      editable: true,
+      flex : 1
+    }]);
+  }
+
+  onMergeCommitsSelectionChanged(event : any){
+    let mergeCommitNodes = this.gridApi
+    .getRenderedNodes().filter(n => n.data.comment.includes("Merge pull request"));
+    mergeCommitNodes.forEach(n => {
+      if(event.target.checked)
+      n.selectThisNode(true)
+      else
+      n.selectThisNode(false)
+    });
+  }
 }

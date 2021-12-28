@@ -20,6 +20,11 @@
 
 
 <div *ngIf="isGenerate">
+  <div class="div-merge-commits-selection-changed">
+    <input class="checkbox-merge-commits-selection" type="checkbox"  id="mergeCommits" (change)="onMergeCommitsSelectionChanged($event)">
+    <label for="mergeCommits">  Select merge commits</label>
+  </div>
+  
   <ag-grid-angular
       class = "ag-theme-balham ag-grid"
       [columnDefs] = "columnDefs"
