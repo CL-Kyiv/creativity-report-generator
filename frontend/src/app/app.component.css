@@ -3,7 +3,7 @@
     width: 90%; 
     height: 600px; 
     font-size: 20px;
-    margin-top: 3%;
+    margin-top: 0.5%;
 }
 .button-generate{
     margin-top:  1%;
@@ -33,5 +33,15 @@ div{
     margin-top: 0.5%;
     height:50px; 
     width:150px;
+}
+.div-merge-commits-selection-changed{
+    margin-left: 2%;
+    margin-top: 2%;
+    font-size: 20px; 
+}
+.checkbox-merge-commits-selection{
+    height:17px; 
+    width:17px;
+    margin-right: 0.5%;
 }
 
