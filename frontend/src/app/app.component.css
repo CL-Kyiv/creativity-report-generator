@@ -7,7 +7,6 @@
 }
 .button-generate{
     margin-top:  1%;
-    margin-left: 1%;
     height:50px; 
     width:100px;
 }
@@ -15,10 +14,12 @@
     margin-left: 1%;
     margin-top: 1%;
     height:50px; 
-    width:200px;
+    width:250px;
+}
+div{
+    font-size: 20px; 
 }
 .input-div {
-    font-size: 20px;
     margin-left: 2%;
     margin-top: 2%;
 }
@@ -33,8 +34,4 @@
     height:50px; 
     width:150px;
 }
-.button-select-another-path{
-    margin-top:1%;
-    height:50px; 
-    width:200px;
-}
+

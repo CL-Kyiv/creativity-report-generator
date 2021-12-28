@@ -1,26 +1,21 @@
-<div class="input-div" *ngIf="!isPathSelected">
+<div class="input-div">
   <div>
     <label for="path">Enter path:</label>
-    <input type="text" id="path"  #path name="path"><br><br>
+    <input type="text" id="path" (change)="onSelectPath(path.value)" #path name="path"><br><br>
   </div>
   <div>
-    <button class="button-select-path" (click)="onSelectPath(path.value)">Select Path</button> 
-  </div>
-</div>  
-
-<div class="input-div" *ngIf="isPathSelected">
-  <div>
-    <label for="date">Select month and year:</label>
-    <input type="month" id="date"  #date name="date"><br><br>
-    <label for="nauthor">Select author:</label>
-    <select  name="nauthor" #nauthor>
-      <option *ngFor="let author of $allAuthors | async" [value]="author">{{author}}</option>
-    </select>
-  </div>
-  <div>
-    <button class="button-select-another-path" (click)="onSelectAnotherPath()">Select another path</button> 
-    <button class="button-generate" (click)="onGenerate(date.value, nauthor.value)">Generate</button> 
-  </div>
+    <div>
+      <label for="date">Select month and year:</label>
+      <input type="month" id="date"  #date name="date"><br><br>
+      <label for="nauthor">Select author:</label>
+      <select  name="nauthor" #nauthor>
+        <option *ngFor="let author of $allAuthors | async" [value]="author">{{author}}</option>
+      </select>
+    </div>
+    <div>
+      <button class="button-generate" (click)="onGenerate(date.value, nauthor.value)">Generate</button> 
+    </div>
+  </div>  
 </div>  
 
 
