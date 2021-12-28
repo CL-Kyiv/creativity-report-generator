@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild, ElementRef } from '@angular/core';
 import { ColDef } from 'ag-grid-community';
 import { filter, Observable } from 'rxjs';
 import { GridApi } from 'ag-grid-community';
@@ -16,6 +16,7 @@ export class AppComponent {
   private gridApi: GridApi;
   $allAuthors : Observable<string[]>;
   path : string;
+  @ViewChild('path', { static: true }) MyDOMElement: ElementRef;
 
   constructor(private service: CreativityReportGeneratorService,
     private matDialog: MatDialog) {
@@ -34,6 +35,7 @@ export class AppComponent {
       field: 'startDate',
       editable: false,
       minWidth : 50,
+      headerCheckboxSelection: true,
       flex : 1,
       checkboxSelection: true,
     },
@@ -69,21 +71,14 @@ export class AppComponent {
 
   isGenerate : boolean = false;
 
-  isPathSelected : boolean = false;
-
   onSelectPath(path : string){
     this.path = path;
     this.$allAuthors = this.service.getAllAuthors(path);
-    this.isPathSelected = true;
   }
-
-  onSelectAnotherPath(){
-    this.isPathSelected = false;
-  }
-
 
   onGenerate(date : string, userName :  string){
     this.rowData$ = this.service.getCreativityReportItems(date, userName, this.path);
+  
     this.isGenerate = true;
   }
 

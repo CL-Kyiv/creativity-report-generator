@@ -13,7 +13,7 @@ namespace CreativityReportGenerator.Services
     {
         public List<string> GetAllAuthors(string path)
         {
-            using (var repo = new Repository(path))
+            using (var repo = new Repository(@$"{path}"))   
             {
                 return repo.Commits.Select(com => com.Author.Name).Distinct().ToList();
             }
