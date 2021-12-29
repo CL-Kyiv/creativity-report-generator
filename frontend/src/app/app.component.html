@@ -21,8 +21,9 @@
 
 <div *ngIf="isGenerate">
   <div class="div-merge-commits-selection-changed">
+    <input type="text" (input)="onFilterChanged($event)" id="filter" placeholder="filter..."/><br><br>
     <input class="checkbox-merge-commits-selection" type="checkbox"  id="mergeCommits" (change)="onMergeCommitsSelectionChanged($event)">
-    <label for="mergeCommits">  Select merge commits</label>
+    <label for="mergeCommits">Select merge commits</label>
   </div>
   
   <ag-grid-angular

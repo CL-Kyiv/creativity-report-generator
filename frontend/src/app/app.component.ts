@@ -116,4 +116,8 @@ export class AppComponent {
       n.selectThisNode(false)
     });
   }
+
+  onFilterChanged(event : any) {
+    this.gridApi.setQuickFilter(event.target.value);
+  }
 }
