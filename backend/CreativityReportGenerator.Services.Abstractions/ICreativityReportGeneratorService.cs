@@ -10,5 +10,6 @@ namespace CreativityReportGenerator.Services.Abstractions
     {
         List<CreativityReportItem> GetCreativityReportItems(DateTime date, string userName, string path);
         List<string> GetAllAuthors(string path);
+        List<string> GetMergeCommitsIdsByAuthorAndDate(DateTime date, string userName, string path);
     }
 }
