@@ -5,7 +5,7 @@ import { GridApi } from 'ag-grid-community';
 import { CreativityReportItem } from './creativity-report-item';
 import { MatDialog } from '@angular/material/dialog';
 import { CreativityReportGeneratorService } from './creativity-report-generator.service'
-import { ColumnAddDialogComponent } from './column-add-dialog.component/column-add-dialog.component';
+import { ColumnAddDialogComponent } from './column-add-dialog.component.ts/column-add-dialog.component';
 
 @Component({
   selector: 'app-root',
@@ -15,11 +15,18 @@ import { ColumnAddDialogComponent } from './column-add-dialog.component/column-a
 export class AppComponent {
   private gridApi: GridApi;
   $allAuthors : Observable<string[]>;
+  public defaultColDef;
   path : string;
   @ViewChild('path', { static: true }) MyDOMElement: ElementRef;
 
   constructor(private service: CreativityReportGeneratorService,
     private matDialog: MatDialog) {
+      this.defaultColDef = {
+        flex: 1,
+        minWidth: 50,
+        editable: false,
+        floatingFilter: true
+      };
   }
   
   onGridReady(params: any) {
@@ -32,37 +39,32 @@ export class AppComponent {
     {
       headerName: 'Start date',
       field: 'startDate',
-      editable: false,
-      minWidth : 50,
       headerCheckboxSelection: true,
-      flex : 1,
-      checkboxSelection: true,
+      filter: 'agDateColumnFilter',
+      checkboxSelection: true
     },
     {
       headerName: 'End date',
       field: 'endDate',
-      editable: false,
-      minWidth : 50,
-      flex : 1,
+      filter: 'agDateColumnFilter',
     },
     {
       headerName: 'Project Name',
       field: 'projectName',
-      editable: false,
       minWidth : 70,
       flex : 1.5
     },
     {
       headerName: 'Commit ID',
       field: 'commitId',
-      editable: false,
+      filter: 'agTextColumnFilter',
       minWidth : 100,
       flex : 2.5
     },
     {
       headerName: 'Comment',
       field: 'comment',
-      editable: false,
+      filter: 'agTextColumnFilter',
       minWidth : 200,
       flex : 4  
     },
@@ -115,9 +117,5 @@ export class AppComponent {
       else
       n.selectThisNode(false)
     });
-  }
-
-  onFilterChanged(event : any) {
-    this.gridApi.setQuickFilter(event.target.value);
   }
 }
