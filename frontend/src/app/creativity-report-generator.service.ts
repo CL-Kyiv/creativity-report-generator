@@ -26,6 +26,16 @@ export class CreativityReportGeneratorService {
   getAllAuthors(path : string): Observable<string[]> {
     let params = new HttpParams();
     params = params.append('path', path);
+
     return this.http.get<string[]>(this.APIUrl + '/authors', { params: params, responseType: 'json'} );
+  }
+
+  getMergeCommitsByAuthorAndDate(date : string, userName :  string, path : string): Observable<string[]> {
+    let params = new HttpParams();
+    params = params.append('date', date);
+    params = params.append('userName', userName);
+    params = params.append('path', path);
+    
+    return this.http.get<string[]>(this.APIUrl + '/mergeCommits', { params: params, responseType: 'json'} );
   }
 }

@@ -1,11 +1,11 @@
 import { Component, ViewChild, ElementRef } from '@angular/core';
 import { ColDef } from 'ag-grid-community';
-import { filter, Observable } from 'rxjs';
+import { filter, Observable, map } from 'rxjs';
 import { GridApi } from 'ag-grid-community';
 import { CreativityReportItem } from './creativity-report-item';
 import { MatDialog } from '@angular/material/dialog';
 import { CreativityReportGeneratorService } from './creativity-report-generator.service'
-import { ColumnAddDialogComponent } from './column-add-dialog.component.ts/column-add-dialog.component';
+import { ColumnAddDialogComponent } from './column-add-dialog.component/column-add-dialog.component';
 
 @Component({
   selector: 'app-root',
@@ -13,11 +13,13 @@ import { ColumnAddDialogComponent } from './column-add-dialog.component.ts/colum
   styleUrls: ['./app.component.css'],
 })
 export class AppComponent {
-  private gridApi: GridApi;
-  $allAuthors : Observable<string[]>;
-  public defaultColDef;
+  gridApi: GridApi;
+  allAuthors$ : Observable<string[]>;
   path : string;
-  @ViewChild('path', { static: true }) MyDOMElement: ElementRef;
+  rowData$: Observable<CreativityReportItem[]>;
+  isGenerate : boolean = false;
+  mergeCommitsIds: string[];
+  public defaultColDef;
 
   constructor(private service: CreativityReportGeneratorService,
     private matDialog: MatDialog) {
@@ -32,8 +34,6 @@ export class AppComponent {
   onGridReady(params: any) {
     this.gridApi = params.api;
   }
-
-  rowData$: Observable<CreativityReportItem[]>;
 
   columnDefs: ColDef[] = [
     {
@@ -70,16 +70,16 @@ export class AppComponent {
     },
   ];
 
-  isGenerate : boolean = false;
-
   onSelectPath(path : string){
     this.path = path;
-    this.$allAuthors = this.service.getAllAuthors(path);
+    this.allAuthors$ = this.service.getAllAuthors(path);
   }
 
   onGenerate(date : string, userName :  string){
     this.rowData$ = this.service.getCreativityReportItems(date, userName, this.path);
-  
+    this.service.getMergeCommitsByAuthorAndDate(date, userName, this.path).subscribe(ids => {
+      this.mergeCommitsIds = ids;
+    });
     this.isGenerate = true;
   }
 
@@ -110,12 +110,12 @@ export class AppComponent {
 
   onMergeCommitsSelectionChanged(event : any){
     let mergeCommitNodes = this.gridApi
-    .getRenderedNodes().filter(n => n.data.comment.includes("Merge pull request"));
+    .getRenderedNodes().filter(n => this.mergeCommitsIds.includes(n.data.commitId));
     mergeCommitNodes.forEach(n => {
       if(event.target.checked)
-      n.selectThisNode(true)
+        n.selectThisNode(true)
       else
-      n.selectThisNode(false)
+        n.selectThisNode(false)
     });
   }
 }

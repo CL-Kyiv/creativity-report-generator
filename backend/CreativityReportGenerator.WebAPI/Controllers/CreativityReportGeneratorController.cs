@@ -25,6 +25,12 @@ namespace CreativityReportGenerator.WebAPI.Controllers
             return Ok(_creativityReportGeneratorService.GetAllAuthors(path));
         }
 
+        [HttpGet("mergeCommits")]
+        public IActionResult GetMergeCommits(DateTime date, string userName, string path)
+        {
+            return Ok(_creativityReportGeneratorService.GetMergeCommitsIdsByAuthorAndDate(date, userName, path));
+        }
+
         [HttpGet]
         public IActionResult GetCreativityReportItems(DateTime date, string userName, string path)
         {
