@@ -8,7 +8,7 @@ import { CreativityReportGeneratorService } from './creativity-report-generator.
 import { AppComponent } from './app.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { ColumnAddDialogComponent } from './column-add-dialog.component/column-add-dialog.component';
+import { ColumnAddDialogComponent } from './column-add-dialog.component.ts/column-add-dialog.component';
 
 @NgModule({
   declarations: [

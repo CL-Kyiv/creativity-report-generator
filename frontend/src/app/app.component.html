@@ -21,7 +21,6 @@
 
 <div *ngIf="isGenerate">
   <div class="div-merge-commits-selection-changed">
-    <input type="text" (input)="onFilterChanged($event)" id="filter" placeholder="filter..."/><br><br>
     <input class="checkbox-merge-commits-selection" type="checkbox"  id="mergeCommits" (change)="onMergeCommitsSelectionChanged($event)">
     <label for="mergeCommits">Select merge commits</label>
   </div>
@@ -30,6 +29,7 @@
       class = "ag-theme-balham ag-grid"
       [columnDefs] = "columnDefs"
       [rowData] = "rowData$ | async"
+      [defaultColDef]= "defaultColDef"
       [rowHeight] = "50"
       rowSelection="multiple"
       [suppressRowClickSelection] = "true"
