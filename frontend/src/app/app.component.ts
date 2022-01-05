@@ -68,6 +68,13 @@ export class AppComponent {
       minWidth : 200,
       flex : 4  
     },
+    {
+      headerName : "Hours",
+      field : "hours",
+      minWidth : 50,
+      editable: true,
+      flex : 1
+    },
   ];
 
   onSelectPath(path : string){

@@ -4,4 +4,5 @@ export interface CreativityReportItem{
     commitId : string;
     comment : string;
     userName : string;
+    hours : number;
 }
