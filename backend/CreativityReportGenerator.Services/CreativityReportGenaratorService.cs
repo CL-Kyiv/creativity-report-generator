@@ -15,7 +15,7 @@ namespace CreativityReportGenerator.Services
         {
             using (var repo = new Repository(@$"{path}"))   
             {
-                return repo.Commits.Select(com => com.Author.Name).Distinct().ToList();
+                return repo.Branches.SelectMany(x => x.Commits).Select(com => com.Author.Name).Distinct().ToList();
             }
         }
 
@@ -59,7 +59,7 @@ namespace CreativityReportGenerator.Services
             DateTime startDate = new DateTime(date.Year, date.Month, 1);
             DateTime endDate = new DateTime(date.Year, date.Month, DateTime.DaysInMonth(date.Year, date.Month));
 
-            var com = repo.Commits
+            var com = repo.Branches.SelectMany(x => x.Commits)
                 .Where(com => com.Author.Name == userName &&
                     com.Author.When > startDate &&
                     com.Author.When < endDate)
@@ -78,7 +78,7 @@ namespace CreativityReportGenerator.Services
 
             if (previousCom == null)
             {
-                hours = 2;
+                hours = 4;
                 return hours;
             }
             else

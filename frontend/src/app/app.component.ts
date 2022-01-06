@@ -27,7 +27,12 @@ export class AppComponent {
         flex: 1,
         minWidth: 50,
         editable: false,
-        floatingFilter: true
+        floatingFilter: true,
+        cellStyle: {
+          'height': '100%',
+          'display': 'flex ',
+          'align-items': 'center ',
+        }  
       };
   }
   
@@ -41,12 +46,16 @@ export class AppComponent {
       field: 'startDate',
       headerCheckboxSelection: true,
       filter: 'agDateColumnFilter',
-      checkboxSelection: true
+      checkboxSelection: true,
+      minWidth : 60,
+      flex : 1.25
     },
     {
       headerName: 'End date',
       field: 'endDate',
       filter: 'agDateColumnFilter',
+      minWidth : 60,
+      flex : 1.25
     },
     {
       headerName: 'Project Name',
