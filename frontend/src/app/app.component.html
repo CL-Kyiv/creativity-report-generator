@@ -21,16 +21,18 @@
 
 <div *ngIf="isGenerate">
   <div class="div-merge-commits-selection-changed">
-    <input class="checkbox-merge-commits-selection" type="checkbox"  id="mergeCommits" (change)="onMergeCommitsSelectionChanged($event)">
-    <label for="mergeCommits">Select merge commits</label>
+    <input class="checkbox-merge-commits-selection" type="checkbox"  id="mergeCommits" (change)="onHideMergeCommits($event)">
+    <label for="mergeCommits">Hide merge commits</label>
   </div>
   
   <ag-grid-angular
       class = "ag-theme-balham ag-grid"
       [columnDefs] = "columnDefs"
-      [rowData] = "rowData$ | async"
+      [rowData] = "rowData"
       [defaultColDef]= "defaultColDef"
       [rowHeight] = "50"
+      [isExternalFilterPresent]= "isExternalFilterPresent"
+      [doesExternalFilterPass]= "doesExternalFilterPass"
       rowSelection="multiple"
       [suppressRowClickSelection] = "true"
       (gridReady) = "onGridReady($event)"

@@ -17,7 +17,9 @@ export class AppComponent {
   allAuthors$ : Observable<string[]>;
   path : string;
   rowData$: Observable<CreativityReportItem[]>;
+  rowData: CreativityReportItem[];
   isGenerate : boolean = false;
+  isHideMergeCommits : boolean = false;
   mergeCommitsIds: string[];
   public defaultColDef;
 
@@ -27,6 +29,7 @@ export class AppComponent {
         flex: 1,
         minWidth: 50,
         editable: false,
+        filter: true,
         floatingFilter: true,
         cellStyle: {
           'height': '100%',
@@ -92,7 +95,7 @@ export class AppComponent {
   }
 
   onGenerate(date : string, userName :  string){
-    this.rowData$ = this.service.getCreativityReportItems(date, userName, this.path);
+    this.service.getCreativityReportItems(date, userName, this.path).subscribe(data => this.rowData = data);
     this.service.getMergeCommitsByAuthorAndDate(date, userName, this.path).subscribe(ids => {
       this.mergeCommitsIds = ids;
     });
@@ -124,14 +127,35 @@ export class AppComponent {
     }]);
   }
 
-  onMergeCommitsSelectionChanged(event : any){
-    let mergeCommitNodes = this.gridApi
-    .getRenderedNodes().filter(n => this.mergeCommitsIds.includes(n.data.commitId));
-    mergeCommitNodes.forEach(n => {
-      if(event.target.checked)
-        n.selectThisNode(true)
-      else
-        n.selectThisNode(false)
-    });
+  onHideMergeCommits(event : any){
+    if(event.target.checked)
+      this.isHideMergeCommits = true;
+    else
+      this.isHideMergeCommits = false;
+    this.gridApi.onFilterChanged();
   }
+  
+  isExternalFilterPresent() {
+    return true;
+  }
+
+  doesExternalFilterPass = (node : any) => {
+    if(this.isHideMergeCommits){
+      return !this.mergeCommitsIds.includes(node.data.commitId);
+    }
+    else{
+      return true;
+    }
+  }
+
+  // setMergeCommitsFilter(){
+  //   var commitIdFilterComponent = this.gridApi.getFilterInstance('commitId');
+  //   var commitIdsWithoutMergeIds = this.rowData.map(row => row['commitId'])
+  //      .filter((value) => {
+  //         return !this.mergeCommitsIds.includes(value);
+  //     });
+  //     commitIdFilterComponent?.setModel({ values: commitIdsWithoutMergeIds });
+  //   this.gridApi.onFilterChanged(); 
+  // }
+  
 }
