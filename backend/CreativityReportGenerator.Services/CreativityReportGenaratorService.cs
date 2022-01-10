@@ -59,12 +59,11 @@ namespace CreativityReportGenerator.Services
             DateTime startDate = new DateTime(date.Year, date.Month, 1);
             DateTime endDate = new DateTime(date.Year, date.Month, DateTime.DaysInMonth(date.Year, date.Month));
 
-            var com = repo.Branches.SelectMany(x => x.Commits)
+            return repo.Branches.SelectMany(x => x.Commits)
                 .Where(com => com.Author.Name == userName &&
                     com.Author.When > startDate &&
                     com.Author.When < endDate)
-                .Select(com => com).ToList();
-            return com;
+                .Select(com => com).Distinct().ToList();
         }
 
         private int CalculateCreativeTime(Commit com, Commit previousCom)
