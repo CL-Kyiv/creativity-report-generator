@@ -15,7 +15,11 @@ namespace CreativityReportGenerator.Services
         {
             using (var repo = new Repository(@$"{path}"))   
             {
-                return repo.Branches.SelectMany(x => x.Commits).Select(com => com.Author.Name).Distinct().ToList();
+                return repo.Branches
+                    .SelectMany(x => x.Commits)
+                    .OrderBy(com => com.Author.Name)
+                    .Select(com => $"{com.Author.Name} ({com.Author.Email})")
+                    .Distinct().ToList();
             }
         }
 

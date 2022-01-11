@@ -29,7 +29,6 @@ export class AppComponent {
         flex: 1,
         minWidth: 50,
         editable: false,
-        filter: true,
         floatingFilter: true,
         cellStyle: {
           'height': '100%',
