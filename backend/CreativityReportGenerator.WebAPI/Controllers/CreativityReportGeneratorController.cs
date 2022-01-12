@@ -32,9 +32,9 @@ namespace CreativityReportGenerator.WebAPI.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetCreativityReportItems(DateTime date, string userName, string path)
+        public IActionResult GetCreativityReportItems(DateTime date, string userName, string path, string startWorkingHours, string endWorkingHours)
         {
-            return Ok(_creativityReportGeneratorService.GetCreativityReportItems(date, userName, path));
+            return Ok(_creativityReportGeneratorService.GetCreativityReportItems(date, userName, path, startWorkingHours, endWorkingHours));
         }
     }
 }

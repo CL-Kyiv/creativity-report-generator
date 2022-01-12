@@ -6,6 +6,8 @@ import { CreativityReportItem } from './creativity-report-item';
 import { MatDialog } from '@angular/material/dialog';
 import { CreativityReportGeneratorService } from './creativity-report-generator.service'
 import { ColumnAddDialogComponent } from './column-add-dialog.component/column-add-dialog.component';
+import { Author } from './author-type';
+import { NumberSymbol } from '@angular/common';
 
 @Component({
   selector: 'app-root',
@@ -14,7 +16,7 @@ import { ColumnAddDialogComponent } from './column-add-dialog.component/column-a
 })
 export class AppComponent {
   gridApi: GridApi;
-  allAuthors$ : Observable<string[]>;
+  allAuthors$ : Observable<Author[]>;
   path : string;
   rowData$: Observable<CreativityReportItem[]>;
   rowData: CreativityReportItem[];
@@ -93,8 +95,9 @@ export class AppComponent {
     this.allAuthors$ = this.service.getAllAuthors(path);
   }
 
-  onGenerate(date : string, userName :  string){
-    this.service.getCreativityReportItems(date, userName, this.path).subscribe(data => this.rowData = data);
+  onGenerate(date : string, userName :  string, startWorkingHours : string, endWorkingHours : string){
+    this.service.getCreativityReportItems(date, userName, this.path, startWorkingHours, endWorkingHours).subscribe(data => this.rowData = data);
+
     this.service.getMergeCommitsByAuthorAndDate(date, userName, this.path).subscribe(ids => {
       this.mergeCommitsIds = ids;
     });
