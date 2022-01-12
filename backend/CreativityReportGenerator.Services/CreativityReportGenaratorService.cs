@@ -11,19 +11,24 @@ namespace CreativityReportGenerator.Services
 {
     public class CreativityReportGenaratorService : ICreativityReportGeneratorService
     {
-        public List<string> GetAllAuthors(string path)
+        public List<Author> GetAllAuthors(string path)
         {
             using (var repo = new Repository(@$"{path}"))   
             {
                 return repo.Branches
                     .SelectMany(x => x.Commits)
                     .OrderBy(com => com.Author.Name)
-                    .Select(com => $"{com.Author.Name} ({com.Author.Email})")
-                    .Distinct().ToList();
+                    .Select(com => new Author
+                        { 
+                            Name = com.Author.Name,
+                            Email = com.Author.Email
+                        })
+                    .Distinct()
+                    .ToList();
             }
         }
 
-        public List<CreativityReportItem> GetCreativityReportItems(DateTime date, string userName, string path)
+        public List<CreativityReportItem> GetCreativityReportItems(DateTime date, string userName, string path, string startWorkingHours, string endWorkingHours)
         {
             using (var repo = new Repository(path))
             {
@@ -42,7 +47,7 @@ namespace CreativityReportGenerator.Services
                         CommitId = com.Sha,
                         Comment = com.Message,
                         UserName = com.Author.Name,
-                        Hours = CalculateCreativeTime(com, linkedListWithoutMergeCommits.Find(com)?.Next?.Value)
+                        Hours = CalculateCreativeTime(com, linkedListWithoutMergeCommits.Find(com)?.Next?.Value, startWorkingHours, endWorkingHours)
                     }).ToList();
             }
         }
@@ -67,33 +72,34 @@ namespace CreativityReportGenerator.Services
                 .Where(com => com.Author.Name == userName &&
                     com.Author.When > startDate &&
                     com.Author.When < endDate)
+                .OrderBy(com => com.Author.When)
                 .Select(com => com).Distinct().ToList();
         }
 
-        private int CalculateCreativeTime(Commit com, Commit previousCom)
+        private int CalculateCreativeTime(Commit com, Commit previousCom, string startWorkingHours, string endWorkingHours)
         {
-            int hours = 0;
+            double hours = 0;
 
             if (com.Parents.Count() > 1)
             {
-                return hours;
+                return (int)hours;
             }
 
             if (previousCom == null)
-            {
-                hours = 4;
-                return hours;
+            { 
+                hours = (Int32.Parse(endWorkingHours) - Int32.Parse(startWorkingHours)) / 2;
+                return (int)hours;
             }
             else
             {
-                var start = previousCom.Author.When;
-                var end = com.Author.When;
+                var start = com.Author.When;
+                var end = previousCom.Author.When;
 
                 while (start <= end)
                 {
                     start = start.AddHours(1);
-                    if (start.Hour > 9 &&
-                       start.Hour < 20 &&
+                    if (start.Hour > Int32.Parse(startWorkingHours) &&
+                       start.Hour < Int32.Parse(endWorkingHours) &&
                        start.DayOfWeek != DayOfWeek.Saturday &&
                        start.DayOfWeek != DayOfWeek.Sunday)
                     {
@@ -101,8 +107,7 @@ namespace CreativityReportGenerator.Services
                     }
                 }
             }
-
-            return hours / 2;
+            return (int)Math.Round(hours / 2, MidpointRounding.AwayFromZero);
         }
     }
 }

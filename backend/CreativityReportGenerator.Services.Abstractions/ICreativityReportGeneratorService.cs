@@ -8,8 +8,8 @@ namespace CreativityReportGenerator.Services.Abstractions
 {
     public interface ICreativityReportGeneratorService
     {
-        List<CreativityReportItem> GetCreativityReportItems(DateTime date, string userName, string path);
-        List<string> GetAllAuthors(string path);
+        List<CreativityReportItem> GetCreativityReportItems(DateTime date, string userName, string path, string startWorkingHours, string endWorkingHours);
+        List<Author> GetAllAuthors(string path);
         List<string> GetMergeCommitsIdsByAuthorAndDate(DateTime date, string userName, string path);
     }
 }
