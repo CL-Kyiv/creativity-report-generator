@@ -7,7 +7,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { CreativityReportGeneratorService } from './creativity-report-generator.service'
 import { ColumnAddDialogComponent } from './column-add-dialog.component/column-add-dialog.component';
 import { Author } from './author-type';
-import { NumberSymbol } from '@angular/common';
+import { CustomDateComponent } from './custom-date-component.component';
 
 @Component({
   selector: 'app-root',
@@ -23,6 +23,7 @@ export class AppComponent {
   isGenerate : boolean = false;
   isHideMergeCommits : boolean = false;
   mergeCommitsIds: string[];
+  public frameworkComponents;
   public defaultColDef;
 
   constructor(private service: CreativityReportGeneratorService,
@@ -38,17 +39,42 @@ export class AppComponent {
           'align-items': 'center ',
         }  
       };
+      this.frameworkComponents = { agDateInput: CustomDateComponent };
   }
   
   onGridReady(params: any) {
     this.gridApi = params.api;
   }
 
+  filterParams = {
+    comparator: (filterLocalDateAtMidnight : any, cellValue : any) => {
+      const dateAsString = cellValue;
+      const dateParts = dateAsString.split('-');
+      const cellDate = new Date(
+        Number(dateParts[0]),
+        Number(dateParts[1]) - 1,
+        Number(dateParts[2])
+      );
+      if (filterLocalDateAtMidnight.getTime() === cellDate.getTime()) {
+        return 0;
+      }
+      if (cellDate < filterLocalDateAtMidnight) {
+        return -1;
+      }
+      if (cellDate > filterLocalDateAtMidnight) {
+        return 1;
+      }
+      return 0;
+    },
+  };
+
+
   columnDefs: ColDef[] = [
     {
       headerName: 'Start date',
       field: 'startDate',
       headerCheckboxSelection: true,
+      filterParams : this.filterParams,
       filter: 'agDateColumnFilter',
       checkboxSelection: true,
       minWidth : 60,
@@ -58,6 +84,7 @@ export class AppComponent {
       headerName: 'End date',
       field: 'endDate',
       filter: 'agDateColumnFilter',
+      filterParams : this.filterParams,
       minWidth : 60,
       flex : 1.25
     },

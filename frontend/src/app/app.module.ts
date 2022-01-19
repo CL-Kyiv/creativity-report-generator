@@ -9,16 +9,18 @@ import { AppComponent } from './app.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ColumnAddDialogComponent } from './column-add-dialog.component/column-add-dialog.component';
+import { CustomDateComponent } from './custom-date-component.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    ColumnAddDialogComponent
+    ColumnAddDialogComponent,
+    CustomDateComponent
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
-    AgGridModule.withComponents([]),
+    AgGridModule.withComponents([CustomDateComponent]),
     BrowserAnimationsModule,
     FormsModule,
     ReactiveFormsModule,
