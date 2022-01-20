@@ -4,7 +4,6 @@ import {IDateParams} from '@ag-grid-community/core';
 import {IDateAngularComp} from '@ag-grid-community/angular';
 import flatpickr from "flatpickr";
 
-
 @Component({
    selector: 'app-custom-date',
    template: `
@@ -23,7 +22,7 @@ import flatpickr from "flatpickr";
                cursor: pointer;
            }
 
-           .custom-date-filter:after {
+           .custom-date-filter:after { 
                position: absolute;
                content: '073';
                display: block;
@@ -40,17 +39,26 @@ export class CustomDateComponent implements IDateAngularComp {
    @ViewChild("flatpickrEl", {read: ElementRef}) flatpickrEl: ElementRef;
    @ViewChild("eInput", {read: ElementRef}) eInput: ElementRef;
    private date: Date;
-   private params: IDateParams;
+   private params: any;
    private picker: any;
+   private selectedDate : string;
 
-   agInit(params: IDateParams): void {
+   agInit(params: any): void {
        this.params = params;
    }
 
    ngAfterViewInit(): void {
+        let minDate = new Date(this.params.filterParams.yearAndMonth.value)
+        let maxDate = new Date(minDate) 
+        maxDate.setMonth(maxDate.getMonth() + 1)
+        maxDate.setDate(maxDate.getDate() - 1)
+
+
        this.picker = flatpickr(this.flatpickrEl.nativeElement, {
            onChange: this.onDateChanged.bind(this),
            wrap: true,
+           minDate: minDate,
+           maxDate: maxDate
        });
 
        this.picker.calendarContainer.classList.add('ag-custom-component-popup');
@@ -80,5 +88,22 @@ export class CustomDateComponent implements IDateAngularComp {
 
    setInputAriaLabel(label: string): void {
        this.eInput.nativeElement.setAttribute('aria-label', label);
+   }
+
+   myMethod(selectedDate : string) {
+    let minDate = new Date(selectedDate)
+    let maxDate = new Date(minDate) 
+    maxDate.setMonth(maxDate.getMonth() + 1)
+    maxDate.setDate(maxDate.getDate() - 1)
+
+
+   this.picker = flatpickr(this.flatpickrEl.nativeElement, {
+       onChange: this.onDateChanged.bind(this),
+       wrap: true,
+       minDate: minDate,
+       maxDate: maxDate
+   });
+
+   this.picker.calendarContainer.classList.add('ag-custom-component-popup');
    }
 }

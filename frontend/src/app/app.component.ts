@@ -1,5 +1,5 @@
 import { Component, ViewChild, ElementRef } from '@angular/core';
-import { ColDef } from 'ag-grid-community';
+import { ColDef, IFilterDef } from 'ag-grid-community';
 import { filter, Observable, map } from 'rxjs';
 import { GridApi } from 'ag-grid-community';
 import { CreativityReportItem } from './creativity-report-item';
@@ -8,6 +8,7 @@ import { CreativityReportGeneratorService } from './creativity-report-generator.
 import { ColumnAddDialogComponent } from './column-add-dialog.component/column-add-dialog.component';
 import { Author } from './author-type';
 import { CustomDateComponent } from './custom-date-component.component';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-root',
@@ -25,6 +26,7 @@ export class AppComponent {
   mergeCommitsIds: string[];
   public frameworkComponents;
   public defaultColDef;
+  selectedDate = new FormControl();
 
   constructor(private service: CreativityReportGeneratorService,
     private matDialog: MatDialog) {
@@ -44,9 +46,13 @@ export class AppComponent {
   
   onGridReady(params: any) {
     this.gridApi = params.api;
+    this.gridApi.getFilterInstance('startDate', function (instance) {
+      instance.getFrameworkComponentInstance!().componentMethod("2021-12");
+    });
   }
 
   filterParams = {
+    yearAndMonth : this.selectedDate,
     comparator: (filterLocalDateAtMidnight : any, cellValue : any) => {
       const dateAsString = cellValue;
       const dateParts = dateAsString.split('-');
@@ -65,7 +71,7 @@ export class AppComponent {
         return 1;
       }
       return 0;
-    },
+    }
   };
 
 
@@ -123,6 +129,8 @@ export class AppComponent {
   }
 
   onGenerate(date : string, userName :  string, startWorkingHours : string, endWorkingHours : string){
+    this.filterParams.yearAndMonth = this.selectedDate;
+    
     this.service.getCreativityReportItems(date, userName, this.path, startWorkingHours, endWorkingHours).subscribe(data => this.rowData = data);
 
     this.service.getMergeCommitsByAuthorAndDate(date, userName, this.path).subscribe(ids => {

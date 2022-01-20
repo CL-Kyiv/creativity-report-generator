@@ -6,7 +6,7 @@
   <div>
     <div>
       <label for="date">Select month and year:</label>
-      <input type="month" id="date"  #date name="date"><br><br>
+      <input type="month" id="date" [formControl] = "selectedDate"><br><br>
       <label for="nauthor">Select author:</label>
       <select  name="nauthor" #nauthor>
         <option *ngFor="let author of allAuthors$ | async" [value]="author.name">{{author.name}} ({{author.email}})</option>
@@ -15,7 +15,7 @@
       <input type="number" min="0" max="23" #end placeholder="0">
     </div>
     <div>
-      <button class="button-generate" (click)="onGenerate(date.value, nauthor.value, start.value, end.value)">Generate</button> 
+      <button class="button-generate" (click)="onGenerate(selectedDate.value, nauthor.value, start.value, end.value)">Generate</button> 
     </div>
   </div>  
 </div>  
