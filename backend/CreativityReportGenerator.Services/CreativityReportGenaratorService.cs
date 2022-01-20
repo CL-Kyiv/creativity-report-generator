@@ -28,13 +28,13 @@ namespace CreativityReportGenerator.Services
             }
         }
 
-        public List<CreativityReportItem> GetCreativityReportItems(DateTime date, string userName, string path, string startWorkingHours, string endWorkingHours)
+        public List<CreativityReportItem> GetCreativityReportItems(DateTime date, string userName, string path, int startWorkingHours, int endWorkingHours)
         {
             using (var repo = new Repository(path))
             {
                 var allCommits = GetAllCommitsByAuthorAndDate(repo, date, userName, path);
 
-                var commitsWithoutMergeCommits = allCommits.Where(com => !(com.Parents.Count() > 1));
+                var commitsWithoutMergeCommits = allCommits.Where(com => (com.Parents.Count() < 2));
 
                 var linkedListWithoutMergeCommits = new LinkedList<Commit>(commitsWithoutMergeCommits);
 
@@ -73,10 +73,10 @@ namespace CreativityReportGenerator.Services
                     com.Author.When > startDate &&
                     com.Author.When < endDate)
                 .OrderBy(com => com.Author.When)
-                .Select(com => com).Distinct().ToList();
+                .Distinct().ToList();
         }
 
-        private int CalculateCreativeTime(Commit com, Commit previousCom, string startWorkingHours, string endWorkingHours)
+        private int CalculateCreativeTime(Commit com, Commit previousCom, int startWorkingHours, int endWorkingHours)
         {
             double hours = 0;
 
@@ -87,7 +87,7 @@ namespace CreativityReportGenerator.Services
 
             if (previousCom == null)
             { 
-                hours = (Int32.Parse(endWorkingHours) - Int32.Parse(startWorkingHours)) / 2;
+                hours = endWorkingHours - startWorkingHours;
                 return (int)hours;
             }
             else
@@ -98,8 +98,8 @@ namespace CreativityReportGenerator.Services
                 while (start <= end)
                 {
                     start = start.AddHours(1);
-                    if (start.Hour > Int32.Parse(startWorkingHours) &&
-                       start.Hour < Int32.Parse(endWorkingHours) &&
+                    if (start.Hour > startWorkingHours &&
+                       start.Hour < endWorkingHours &&
                        start.DayOfWeek != DayOfWeek.Saturday &&
                        start.DayOfWeek != DayOfWeek.Sunday)
                     {

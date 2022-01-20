@@ -157,10 +157,7 @@ export class AppComponent {
   }
 
   onHideMergeCommits(event : any){
-    if(event.target.checked)
-      this.isHideMergeCommits = true;
-    else
-      this.isHideMergeCommits = false;
+    this.isHideMergeCommits = event.target.checked ? true : false;
     this.gridApi.onFilterChanged();
   }
   
@@ -169,22 +166,6 @@ export class AppComponent {
   }
 
   doesExternalFilterPass = (node : any) => {
-    if(this.isHideMergeCommits){
-      return !this.mergeCommitsIds.includes(node.data.commitId);
-    }
-    else{
-      return true;
-    }
+    return this.isHideMergeCommits ? !this.mergeCommitsIds.includes(node.data.commitId) : true;
   }
-
-  // setMergeCommitsFilter(){
-  //   var commitIdFilterComponent = this.gridApi.getFilterInstance('commitId');
-  //   var commitIdsWithoutMergeIds = this.rowData.map(row => row['commitId'])
-  //      .filter((value) => {
-  //         return !this.mergeCommitsIds.includes(value);
-  //     });
-  //     commitIdFilterComponent?.setModel({ values: commitIdsWithoutMergeIds });
-  //   this.gridApi.onFilterChanged(); 
-  // }
-  
 }
