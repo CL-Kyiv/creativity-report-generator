@@ -146,26 +146,27 @@ export class AppComponent {
   }
 
   onAddColumn(headerName : string){
-    this.columnDefs = this.columnDefs.concat([
+    this.columnDefs.push(
     {
       headerName : headerName,
       field : headerName.toLocaleLowerCase(),
       minWidth : 50,
       editable: true,
       flex : 1
-    }]);
+    });
+    this.gridApi.setColumnDefs(this.columnDefs);
   }
 
   onHideMergeCommits(event : any){
-    this.isHideMergeCommits = event.target.checked ? true : false;
+    this.isHideMergeCommits = event.target.checked;
     this.gridApi.onFilterChanged();
   }
   
-  isExternalFilterPresent() {
-    return true;
+  isExternalFilterPresent = () => {
+    return this.isHideMergeCommits;
   }
 
   doesExternalFilterPass = (node : any) => {
-    return this.isHideMergeCommits ? !this.mergeCommitsIds.includes(node.data.commitId) : true;
+    return !this.mergeCommitsIds.includes(node.data.commitId);
   }
 }
