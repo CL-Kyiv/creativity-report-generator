@@ -38,31 +38,20 @@ import flatpickr from "flatpickr";
 export class CustomDateComponent implements IDateAngularComp {
    @ViewChild("flatpickrEl", {read: ElementRef}) flatpickrEl: ElementRef;
    @ViewChild("eInput", {read: ElementRef}) eInput: ElementRef;
+
    private date: Date;
    private params: any;
    private picker: any;
-   private selectedDate : string;
 
    agInit(params: any): void {
        this.params = params;
+       this.params.filterParams.onChange.valueChanges.subscribe(
+            (value : any) => this.addFlatpickr(value));
    }
 
    ngAfterViewInit(): void {
-        let minDate = new Date(this.params.filterParams.yearAndMonth.value)
-        let maxDate = new Date(minDate) 
-        maxDate.setMonth(maxDate.getMonth() + 1)
-        maxDate.setDate(maxDate.getDate() - 1)
-
-
-       this.picker = flatpickr(this.flatpickrEl.nativeElement, {
-           onChange: this.onDateChanged.bind(this),
-           wrap: true,
-           minDate: minDate,
-           maxDate: maxDate
-       });
-
-       this.picker.calendarContainer.classList.add('ag-custom-component-popup');
-   }
+        this.addFlatpickr(this.params.filterParams.value.value);
+    }
 
    ngOnDestroy() {
        console.log(`Destroying DateComponent`);
@@ -90,20 +79,20 @@ export class CustomDateComponent implements IDateAngularComp {
        this.eInput.nativeElement.setAttribute('aria-label', label);
    }
 
-   myMethod(selectedDate : string) {
-    let minDate = new Date(selectedDate)
-    let maxDate = new Date(minDate) 
-    maxDate.setMonth(maxDate.getMonth() + 1)
-    maxDate.setDate(maxDate.getDate() - 1)
+   private addFlatpickr(date : any){
+        let minDate = new Date(date);
+        let maxDate = new Date(minDate);
+        maxDate.setMonth(maxDate.getMonth() + 1);
+        maxDate.setDate(maxDate.getDate() - 1);
 
 
-   this.picker = flatpickr(this.flatpickrEl.nativeElement, {
-       onChange: this.onDateChanged.bind(this),
-       wrap: true,
-       minDate: minDate,
-       maxDate: maxDate
-   });
+        this.picker = flatpickr(this.flatpickrEl.nativeElement, {
+            onChange: this.onDateChanged.bind(this),
+            wrap: true,
+            minDate: minDate,
+            maxDate: maxDate
+        });
 
-   this.picker.calendarContainer.classList.add('ag-custom-component-popup');
+        this.picker.calendarContainer.classList.add('ag-custom-component-popup');  
    }
 }
