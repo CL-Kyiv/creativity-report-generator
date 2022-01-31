@@ -151,45 +151,27 @@ export class AppComponent {
   }
 
   onAddColumn(headerName : string){
-    this.columnDefs = this.columnDefs.concat([
+    this.columnDefs.push(
     {
       headerName : headerName,
       field : headerName.toLocaleLowerCase(),
       minWidth : 50,
       editable: true,
       flex : 1
-    }]);
+    });
+    this.gridApi.setColumnDefs(this.columnDefs);
   }
 
   onHideMergeCommits(event : any){
-    if(event.target.checked)
-      this.isHideMergeCommits = true;
-    else
-      this.isHideMergeCommits = false;
+    this.isHideMergeCommits = event.target.checked;
     this.gridApi.onFilterChanged();
   }
   
-  isExternalFilterPresent() {
-    return true;
+  isExternalFilterPresent = () => {
+    return this.isHideMergeCommits;
   }
 
   doesExternalFilterPass = (node : any) => {
-    if(this.isHideMergeCommits){
-      return !this.mergeCommitsIds.includes(node.data.commitId);
-    }
-    else{
-      return true;
-    }
+    return !this.mergeCommitsIds.includes(node.data.commitId);
   }
-
-  // setMergeCommitsFilter(){
-  //   var commitIdFilterComponent = this.gridApi.getFilterInstance('commitId');
-  //   var commitIdsWithoutMergeIds = this.rowData.map(row => row['commitId'])
-  //      .filter((value) => {
-  //         return !this.mergeCommitsIds.includes(value);
-  //     });
-  //     commitIdFilterComponent?.setModel({ values: commitIdsWithoutMergeIds });
-  //   this.gridApi.onFilterChanged(); 
-  // }
-  
 }
