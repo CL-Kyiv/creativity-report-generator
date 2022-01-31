@@ -1,5 +1,5 @@
 import { Component, ViewChild, ElementRef } from '@angular/core';
-import { ColDef } from 'ag-grid-community';
+import { ColDef, IFilterDef } from 'ag-grid-community';
 import { filter, Observable, map } from 'rxjs';
 import { GridApi } from 'ag-grid-community';
 import { CreativityReportItem } from './creativity-report-item';
@@ -8,6 +8,7 @@ import { CreativityReportGeneratorService } from './creativity-report-generator.
 import { ColumnAddDialogComponent } from './column-add-dialog.component/column-add-dialog.component';
 import { Author } from './author-type';
 import { CustomDateComponent } from './custom-date-component.component';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-root',
@@ -25,6 +26,7 @@ export class AppComponent {
   mergeCommitsIds: string[];
   public frameworkComponents;
   public defaultColDef;
+  selectedDate = new FormControl();
 
   constructor(private service: CreativityReportGeneratorService,
     private matDialog: MatDialog) {
@@ -47,6 +49,8 @@ export class AppComponent {
   }
 
   filterParams = {
+    value : this.selectedDate,
+    onChange : this.selectedDate,
     comparator: (filterLocalDateAtMidnight : any, cellValue : any) => {
       const dateAsString = cellValue;
       const dateParts = dateAsString.split('-');
@@ -65,7 +69,7 @@ export class AppComponent {
         return 1;
       }
       return 0;
-    },
+    }
   };
 
 
@@ -128,6 +132,7 @@ export class AppComponent {
     this.service.getMergeCommitsByAuthorAndDate(date, userName, this.path).subscribe(ids => {
       this.mergeCommitsIds = ids;
     });
+
     this.isGenerate = true;
   }
 
@@ -146,26 +151,27 @@ export class AppComponent {
   }
 
   onAddColumn(headerName : string){
-    this.columnDefs = this.columnDefs.concat([
+    this.columnDefs.push(
     {
       headerName : headerName,
       field : headerName.toLocaleLowerCase(),
       minWidth : 50,
       editable: true,
       flex : 1
-    }]);
+    });
+    this.gridApi.setColumnDefs(this.columnDefs);
   }
 
   onHideMergeCommits(event : any){
-    this.isHideMergeCommits = event.target.checked ? true : false;
+    this.isHideMergeCommits = event.target.checked;
     this.gridApi.onFilterChanged();
   }
   
-  isExternalFilterPresent() {
-    return true;
+  isExternalFilterPresent = () => {
+    return this.isHideMergeCommits;
   }
 
   doesExternalFilterPass = (node : any) => {
-    return this.isHideMergeCommits ? !this.mergeCommitsIds.includes(node.data.commitId) : true;
+    return !this.mergeCommitsIds.includes(node.data.commitId);
   }
 }

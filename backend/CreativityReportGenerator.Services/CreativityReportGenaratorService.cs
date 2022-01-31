@@ -32,7 +32,7 @@ namespace CreativityReportGenerator.Services
         {
             using (var repo = new Repository(path))
             {
-                var allCommits = GetAllCommitsByAuthorAndDate(repo, date, userName, path);
+                var allCommits = GetAllCommitsByAuthorAndDate(repo, date, userName);
 
                 var commitsWithoutMergeCommits = allCommits.Where(com => (com.Parents.Count() < 2));
 
@@ -56,24 +56,28 @@ namespace CreativityReportGenerator.Services
         {
             using (var repo = new Repository(path))
             {
-                return GetAllCommitsByAuthorAndDate(repo, date, userName, path)
+                return GetAllCommitsByAuthorAndDate(repo, date, userName)
                     .Where(com => com.Parents.Count() > 1)
                     .Select(com => com.Sha)
                     .ToList();      
             }
         }
 
-        private List<Commit> GetAllCommitsByAuthorAndDate(Repository repo, DateTime date, string userName, string path)
+        private List<Commit> GetAllCommitsByAuthorAndDate(Repository repo, DateTime date, string userName)
         {
             DateTime startDate = new DateTime(date.Year, date.Month, 1);
             DateTime endDate = new DateTime(date.Year, date.Month, DateTime.DaysInMonth(date.Year, date.Month));
 
-            return repo.Branches.SelectMany(x => x.Commits)
+            return repo.Branches
+                .Where(br => br.IsRemote)
+                .SelectMany(x => x.Commits)
                 .Where(com => com.Author.Name == userName &&
-                    com.Author.When > startDate &&
-                    com.Author.When < endDate)
+                    com.Author.When >= startDate &&
+                    com.Author.When <= endDate)
                 .OrderBy(com => com.Author.When)
-                .Distinct().ToList();
+                .GroupBy(com => com.Sha)
+                .Select(id => id.FirstOrDefault())
+                .ToList();
         }
 
         private int CalculateCreativeTime(Commit com, Commit previousCom, int startWorkingHours, int endWorkingHours)
