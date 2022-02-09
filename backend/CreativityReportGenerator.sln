@@ -9,7 +9,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CreativityReportGenerator.C
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CreativityReportGenerator.Services", "CreativityReportGenerator.Services\CreativityReportGenerator.Services.csproj", "{D7C51D64-9445-4B10-B54C-8167D2D49711}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CreativityReportGenerator.Services.Abstractions", "CreativityReportGenerator.Services.Abstractions\CreativityReportGenerator.Services.Abstractions.csproj", "{9248D4E2-8CAE-4DDC-8297-10127C79070F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CreativityReportGenerator.Services.Abstractions", "CreativityReportGenerator.Services.Abstractions\CreativityReportGenerator.Services.Abstractions.csproj", "{9248D4E2-8CAE-4DDC-8297-10127C79070F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{5A80E0B1-09B7-47C0-91AC-9AABA9BDCEE6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CreativityReportGenerator.Services.Tests", "CreativityReportGenerator.Services.Tests\CreativityReportGenerator.Services.Tests.csproj", "{076BC03E-110F-4948-A534-9711E83EEAAB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,9 +37,16 @@ Global
 		{9248D4E2-8CAE-4DDC-8297-10127C79070F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9248D4E2-8CAE-4DDC-8297-10127C79070F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9248D4E2-8CAE-4DDC-8297-10127C79070F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{076BC03E-110F-4948-A534-9711E83EEAAB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{076BC03E-110F-4948-A534-9711E83EEAAB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{076BC03E-110F-4948-A534-9711E83EEAAB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{076BC03E-110F-4948-A534-9711E83EEAAB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{076BC03E-110F-4948-A534-9711E83EEAAB} = {5A80E0B1-09B7-47C0-91AC-9AABA9BDCEE6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5354D8AB-F44E-4931-9649-4F0C58C8FDBA}

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace CreativityReportGenerator.Core.Models
+﻿namespace CreativityReportGenerator.Core.Models
 {
     public class CreativityReportItem
     {
