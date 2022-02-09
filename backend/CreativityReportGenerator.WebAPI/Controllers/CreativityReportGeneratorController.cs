@@ -1,10 +1,6 @@
-﻿using CreativityReportGenerator.Core.Models;
-using CreativityReportGenerator.Services.Abstractions;
+﻿using CreativityReportGenerator.Services.Abstractions;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace CreativityReportGenerator.WebAPI.Controllers
 {

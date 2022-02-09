@@ -4,8 +4,6 @@ using LibGit2Sharp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CreativityReportGenerator.Services
 {
@@ -16,6 +14,7 @@ namespace CreativityReportGenerator.Services
             using (var repo = new Repository(@$"{path}"))   
             {
                 return repo.Branches
+                    .Where(br => br.IsRemote)
                     .SelectMany(x => x.Commits)
                     .OrderBy(com => com.Author.Name)
                     .Select(com => new Author
@@ -47,7 +46,7 @@ namespace CreativityReportGenerator.Services
                         CommitId = com.Sha,
                         Comment = com.Message,
                         UserName = com.Author.Name,
-                        Hours = CalculateCreativeTime(com, linkedListWithoutMergeCommits.Find(com)?.Next?.Value, startWorkingHours, endWorkingHours)
+                        Hours = CalculateCreativeTime(com, linkedListWithoutMergeCommits.Find(com)?.Previous?.Value, startWorkingHours, endWorkingHours)
                     }).ToList();
             }
         }
@@ -80,7 +79,7 @@ namespace CreativityReportGenerator.Services
                 .ToList();
         }
 
-        private int CalculateCreativeTime(Commit com, Commit previousCom, int startWorkingHours, int endWorkingHours)
+        public int CalculateCreativeTime(Commit com, Commit previousCom, int startWorkingHours, int endWorkingHours)
         {
             double hours = 0;
 
@@ -92,14 +91,13 @@ namespace CreativityReportGenerator.Services
             if (previousCom == null)
             { 
                 hours = endWorkingHours - startWorkingHours;
-                return (int)hours;
             }
             else
             {
-                var start = com.Author.When;
-                var end = previousCom.Author.When;
+                var start = previousCom.Author.When;
+                var end = com.Author.When;
 
-                while (start <= end)
+                while (start < end)
                 {
                     start = start.AddHours(1);
                     if (start.Hour > startWorkingHours &&
