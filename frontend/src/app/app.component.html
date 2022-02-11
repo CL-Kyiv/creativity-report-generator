@@ -1,25 +1,26 @@
-<div class="input-div">
-  <div>
+  
+<form [formGroup]="checkoutForm" (ngSubmit)="onGenerate(selectedDate.value, nauthor.value, start.value, end.value)">
+  <div class="form-group input-div"> 
     <label for="path">Enter path:</label>
-    <input type="text" id="path" (change)="onSelectPath(path.value)" #path name="path"><br><br>
+    <input type="text" required id="path" formControlName="path" (change)="onSelectPath(path.value)" #path name="path">
   </div>
-  <div>
-    <div>
-      <label for="date">Select month and year:</label>
-      <input type="month" id="date" [formControl] = "selectedDate"><br><br>
-      <label for="nauthor">Select author:</label>
-      <select  name="nauthor" #nauthor>
-        <option *ngFor="let author of allAuthors$ | async" [value]="author.name">{{author.name}} ({{author.email}})</option>
-      </select><br><br>
-      Choose working hours: <input type="number" min="0" max="23" #start placeholder="0"> -
-      <input type="number" min="0" max="23" #end placeholder="0">
-    </div>
-    <div>
-      <button class="button-generate" (click)="onGenerate(selectedDate.value, nauthor.value, start.value, end.value)">Generate</button> 
-    </div>
-  </div>  
-</div>  
-
+  
+  <div class="form-group input-div">
+    <label for="date">Select month and year:</label>
+    <input type="month" required id="date" formControlName="selectedDate" [formControl] = "selectedDate">
+  </div>
+  <div class="form-group input-div">
+    <label for="nauthor">Select author:</label>
+    <select required formControlName="nauthor" name="nauthor" #nauthor>
+      <option *ngFor="let author of allAuthors$ | async" [value]="author.name">{{author.name}} ({{author.email}})</option>
+    </select>
+  </div> 
+  <div class="form-group input-div">
+    Choose working hours: <input type="number" required formControlName="start" min="0" max="23" #start placeholder="0"> -
+        <input type="number" required formControlName="end" min="0" max="23" #end placeholder="0">
+  </div>
+    <button class="button-generate" type="submit" [disabled]="checkoutForm.invalid">Generate</button> 
+</form>
 
 <div *ngIf="isGenerate">
   <div class="div-merge-commits-selection-changed">

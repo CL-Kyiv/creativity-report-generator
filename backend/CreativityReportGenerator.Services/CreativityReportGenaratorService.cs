@@ -14,6 +14,7 @@ namespace CreativityReportGenerator.Services
             using (var repo = new Repository(@$"{path}"))   
             {
                 return repo.Branches
+                    .Where(br => br.IsRemote)
                     .SelectMany(x => x.Commits)
                     .OrderBy(com => com.Author.Name)
                     .Select(com => new Author

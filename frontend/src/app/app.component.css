@@ -9,6 +9,7 @@
     margin-top:  1%;
     height:50px; 
     width:100px;
+    margin-left: 2%;
 }
 .button-export{
     margin-left: 1%;
@@ -21,7 +22,7 @@ div{
 }
 .input-div {
     margin-left: 2%;
-    margin-top: 2%;
+    margin-top: 1%;
 }
 .button-create-column{
     margin-left: 65%;

@@ -8,7 +8,7 @@ import { CreativityReportGeneratorService } from './creativity-report-generator.
 import { ColumnAddDialogComponent } from './column-add-dialog.component/column-add-dialog.component';
 import { Author } from './author-type';
 import { CustomDateComponent } from './custom-date-component.component';
-import { FormControl } from '@angular/forms';
+import { FormControl, FormBuilder } from '@angular/forms';
 
 @Component({
   selector: 'app-root',
@@ -28,8 +28,17 @@ export class AppComponent {
   public defaultColDef;
   selectedDate = new FormControl();
 
+  checkoutForm = this.formBuilder.group({
+    path: '',
+    selectedDate: this.selectedDate,
+    nauthor: '',
+    start: '',
+    end: ''
+  });
+
   constructor(private service: CreativityReportGeneratorService,
-    private matDialog: MatDialog) {
+    private matDialog: MatDialog,
+    private formBuilder: FormBuilder) {
       this.defaultColDef = {
         flex: 1,
         minWidth: 50,
