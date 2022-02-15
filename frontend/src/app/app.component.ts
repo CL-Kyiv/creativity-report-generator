@@ -1,6 +1,6 @@
 import { Component, ViewChild, ElementRef } from '@angular/core';
 import { ColDef, IFilterDef } from 'ag-grid-community';
-import { filter, Observable, map } from 'rxjs';
+import { filter, Observable, map, catchError, of } from 'rxjs';
 import { GridApi } from 'ag-grid-community';
 import { CreativityReportItem } from './creativity-report-item';
 import { MatDialog } from '@angular/material/dialog';
@@ -17,9 +17,8 @@ import { FormControl, FormBuilder } from '@angular/forms';
 })
 export class AppComponent {
   gridApi: GridApi;
-  allAuthors$ : Observable<Author[]>;
+  allAuthors : Author[];
   path : string;
-  rowData$: Observable<CreativityReportItem[]>;
   rowData: CreativityReportItem[];
   isGenerate : boolean = false;
   isHideMergeCommits : boolean = false;
@@ -27,11 +26,15 @@ export class AppComponent {
   public frameworkComponents;
   public defaultColDef;
   selectedDate = new FormControl();
+  messageError : string;
+  isSelectAuthorsRequestInProgress : boolean = false;
+  author = new FormControl();
+  isSelectedPath : boolean = false;
 
   checkoutForm = this.formBuilder.group({
     path: '',
     selectedDate: this.selectedDate,
-    nauthor: '',
+    author: this.author,
     start: '',
     end: ''
   });
@@ -131,14 +134,26 @@ export class AppComponent {
   ];
 
   onSelectPath(path : string){
+    this.isSelectedPath = true;
+    this.isSelectAuthorsRequestInProgress = true;
     this.path = path;
-    this.allAuthors$ = this.service.getAllAuthors(path);
+    this.service
+      .getAllAuthors(path)
+      .pipe(
+        catchError(error => {
+          this.messageError = error.error;
+          return of([])
+        })
+      ).subscribe(authors => {
+        this.allAuthors = authors;
+        this.isSelectAuthorsRequestInProgress = false; 
+      });
   }
 
-  onGenerate(date : string, userName :  string, startWorkingHours : string, endWorkingHours : string){
-    this.service.getCreativityReportItems(date, userName, this.path, startWorkingHours, endWorkingHours).subscribe(data => this.rowData = data);
+  onGenerate(date : string, startWorkingHours : string, endWorkingHours : string){
+    this.service.getCreativityReportItems(date, this.author.value, this.path, startWorkingHours, endWorkingHours).subscribe(data => this.rowData = data);
 
-    this.service.getMergeCommitsByAuthorAndDate(date, userName, this.path).subscribe(ids => {
+    this.service.getMergeCommitsByAuthorAndDate(date, this.author.value, this.path).subscribe(ids => {
       this.mergeCommitsIds = ids;
     });
 

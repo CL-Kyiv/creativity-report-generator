@@ -1,6 +1,7 @@
 ﻿using CreativityReportGenerator.Services.Abstractions;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.IO;
 
 namespace CreativityReportGenerator.WebAPI.Controllers
 {
@@ -18,6 +19,11 @@ namespace CreativityReportGenerator.WebAPI.Controllers
         [HttpGet("authors")]
         public IActionResult GetAllAuthors(string path)
         {
+            if (!Directory.Exists(path))
+            {
+                return BadRequest("wrong path");
+            }
+
             return Ok(_creativityReportGeneratorService.GetAllAuthors(path));
         }
 
