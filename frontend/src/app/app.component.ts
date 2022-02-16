@@ -133,12 +133,12 @@ export class AppComponent {
     },
   ];
 
-  onSelectPath(path : string){
+  onSelectPath(path : string, date : string){
     this.isSelectedPath = true;
     this.isSelectAuthorsRequestInProgress = true;
     this.path = path;
     this.service
-      .getAllAuthors(path)
+      .getAllAuthors(path, date)
       .pipe(
         catchError(error => {
           this.messageError = error.error;

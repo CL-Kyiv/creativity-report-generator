@@ -17,14 +17,14 @@ namespace CreativityReportGenerator.WebAPI.Controllers
         }
 
         [HttpGet("authors")]
-        public IActionResult GetAllAuthors(string path)
+        public IActionResult GetAllAuthors(string path, string date)
         {
             if (!Directory.Exists(path))
             {
                 return BadRequest("wrong path");
             }
 
-            return Ok(_creativityReportGeneratorService.GetAllAuthors(path));
+            return Ok(_creativityReportGeneratorService.GetAllAuthors(path, date));
         }
 
         [HttpGet("mergeCommits")]
