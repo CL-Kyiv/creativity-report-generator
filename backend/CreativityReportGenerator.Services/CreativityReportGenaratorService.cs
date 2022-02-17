@@ -9,19 +9,17 @@ namespace CreativityReportGenerator.Services
 {
     public class CreativityReportGenaratorService : ICreativityReportGeneratorService
     {
-        public List<Author> GetAllAuthors(string path)
+        public List<Author> GetAllAuthors(string path, DateTime date)
         {
-            using (var repo = new Repository(@$"{path}"))   
+            using (var repo = new Repository(@$"{path}"))
             {
-                return repo.Branches
-                    .Where(br => br.IsRemote)
-                    .SelectMany(x => x.Commits)
+                return GetCommitsByDate(repo, date)
                     .OrderBy(com => com.Author.Name)
                     .Select(com => new Author
-                        { 
-                            Name = com.Author.Name,
-                            Email = com.Author.Email
-                        })
+                    {
+                        Name = com.Author.Name,
+                        Email = com.Author.Email
+                    })
                     .Distinct()
                     .ToList();
             }
@@ -64,15 +62,10 @@ namespace CreativityReportGenerator.Services
 
         private List<Commit> GetAllCommitsByAuthorAndDate(Repository repo, DateTime date, string userName)
         {
-            DateTime startDate = new DateTime(date.Year, date.Month, 1);
-            DateTime endDate = new DateTime(date.Year, date.Month, DateTime.DaysInMonth(date.Year, date.Month));
+            var commitsByDate = GetCommitsByDate(repo, date);
 
-            return repo.Branches
-                .Where(br => br.IsRemote)
-                .SelectMany(x => x.Commits)
-                .Where(com => com.Author.Name == userName &&
-                    com.Author.When >= startDate &&
-                    com.Author.When <= endDate)
+            return commitsByDate
+                .Where(com => com.Author.Name == userName)
                 .OrderBy(com => com.Author.When)
                 .GroupBy(com => com.Sha)
                 .Select(id => id.FirstOrDefault())
@@ -110,6 +103,19 @@ namespace CreativityReportGenerator.Services
                 }
             }
             return (int)Math.Round(hours / 2, MidpointRounding.AwayFromZero);
+        }
+
+        private List<Commit> GetCommitsByDate(Repository repo, DateTime date)
+        {
+            DateTime startDate = new DateTime(date.Year, date.Month, 1);
+            DateTime endDate = new DateTime(date.Year, date.Month, DateTime.DaysInMonth(date.Year, date.Month));
+
+            return repo.Branches
+                .Where(br => br.IsRemote)
+                .SelectMany(x => x.Commits)
+                .Where(com =>
+                com.Author.When >= startDate &&
+                com.Author.When <= endDate).ToList();
         }
     }
 }

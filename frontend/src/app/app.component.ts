@@ -30,13 +30,19 @@ export class AppComponent {
   isSelectAuthorsRequestInProgress : boolean = false;
   author = new FormControl();
   isSelectedPath : boolean = false;
+  isMessageError : boolean = false;
 
-  checkoutForm = this.formBuilder.group({
+  generateForm = this.formBuilder.group({
     path: '',
     selectedDate: this.selectedDate,
     author: this.author,
     start: '',
     end: ''
+  });
+
+  getAuthorsForm = this.formBuilder.group({
+    path: '',
+    selectedDate: this.selectedDate
   });
 
   constructor(private service: CreativityReportGeneratorService,
@@ -133,15 +139,17 @@ export class AppComponent {
     },
   ];
 
-  onSelectPath(path : string){
+  onSelectPath(path : string, date : string){
     this.isSelectedPath = true;
     this.isSelectAuthorsRequestInProgress = true;
     this.path = path;
     this.service
-      .getAllAuthors(path)
+      .getAllAuthors(path, date)
       .pipe(
         catchError(error => {
           this.messageError = error.error;
+          this.isSelectedPath = false;
+          this.isSelectAuthorsRequestInProgress = false;
           return of([])
         })
       ).subscribe(authors => {
