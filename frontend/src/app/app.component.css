@@ -66,4 +66,9 @@ div{
     justify-content: flex-start;
 
 }
+.button-get-authors{
+    height: 40px;
+    width: 70px;
+    margin-left: 1%;
+}
 

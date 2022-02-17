@@ -1,36 +1,39 @@
   
-<form [formGroup]="checkoutForm" (ngSubmit)="onGenerate(selectedDate.value, start.value, end.value)">
-  <div class="form-group input-div">
+<form [formGroup]="getAuthorsForm" (ngSubmit)="onSelectPath(path.value, selectedDate.value)">
+  <div class="input-div">
     <label for="date">Select month and year:</label>&nbsp;
     <input type="month" required id="date" formControlName="selectedDate" [formControl] = "selectedDate">
   </div>
 
-  <div class="form-group input-div"> 
+  <div class="input-div"> 
     <label for="path">Enter path:</label>&nbsp;
     <input type="text" required id="path" formControlName="path" #path name="path">
-    <button (click)="onSelectPath(path.value, selectedDate.value)">Enter</button>
-    <span>{{messageError}}</span>
+    <button class="button-get-authors" type="submit" [disabled]="getAuthorsForm.invalid">Enter</button>
+    <span *ngIf="!isSelectedPath">  {{messageError}}</span>
   </div>
-
-  <div class="form-group input-div">
-    Choose working hours: <input type="number" required formControlName="start" min="0" max="23" #start placeholder="0"> -
-        <input type="number" required formControlName="end" min="0" max="23" #end placeholder="0">
-  </div>
-
-  <div *ngIf="isSelectedPath" class="form-group input-div">
-    <div class="div-loader" *ngIf="isSelectAuthorsRequestInProgress">
-      <label for="loader">Select author:</label>&nbsp;
-      <div class="loader" id="loader"></div>  
-    </div>
-    <div *ngIf="!isSelectAuthorsRequestInProgress">
-      <label for="author">Select author:</label>&nbsp;
-      <select required formControlName="author" [formControl] = "author" id="author">
-        <option *ngFor="let author of allAuthors" [value]="author.name">{{author.name}} ({{author.email}})</option>
-      </select>
-    </div>
-  </div> 
-    <button class="button-generate" type="submit" [disabled]="checkoutForm.invalid">Generate</button> 
 </form>
+<div *ngIf="isSelectedPath">
+  <form [formGroup]="generateForm" (ngSubmit)="onGenerate(selectedDate.value, start.value, end.value)">
+    <div class="input-div">
+      Choose working hours: <input type="number" required formControlName="start" min="0" max="23" #start placeholder="0"> -
+          <input type="number" required formControlName="end" min="0" max="23" #end placeholder="0">
+    </div>
+
+    <div class="input-div">
+      <div class="div-loader" *ngIf="isSelectAuthorsRequestInProgress">
+        <label for="loader">Select author:</label>&nbsp;
+        <div class="loader" id="loader"></div>  
+      </div>
+      <div *ngIf="!isSelectAuthorsRequestInProgress">
+        <label for="author">Select author:</label>&nbsp;
+        <select required formControlName="author" [formControl] = "author" id="author">
+          <option *ngFor="let author of allAuthors" [value]="author.name">{{author.name}} ({{author.email}})</option>
+        </select>
+      </div>
+    </div> 
+      <button class="button-generate" type="submit" [disabled]="generateForm.invalid">Generate</button> 
+  </form>
+</div>
 
 <div *ngIf="isGenerate">
   <div class="div-merge-commits-selection-changed">

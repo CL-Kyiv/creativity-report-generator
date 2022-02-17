@@ -17,7 +17,7 @@ namespace CreativityReportGenerator.WebAPI.Controllers
         }
 
         [HttpGet("authors")]
-        public IActionResult GetAllAuthors(string path, string date)
+        public IActionResult GetAllAuthors(string path, DateTime date)
         {
             if (!Directory.Exists(path))
             {
