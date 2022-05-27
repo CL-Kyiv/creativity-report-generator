@@ -85,7 +85,7 @@ namespace CreativityReportGenerator.Services.Tests
             result.Should().Be(expectedResult);
         }
 
-        private CreativityReportGenaratorService CreateTestCandidate() =>
-            new CreativityReportGenaratorService();
+        private LocalCreativityReportGenaratorService CreateTestCandidate() =>
+            new LocalCreativityReportGenaratorService();
     }
 }

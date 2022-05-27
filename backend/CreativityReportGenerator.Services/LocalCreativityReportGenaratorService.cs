@@ -7,19 +7,17 @@ using System.Linq;
 
 namespace CreativityReportGenerator.Services
 {
-    public class CreativityReportGenaratorService : ICreativityReportGeneratorService
+    public class LocalCreativityReportGenaratorService : ICreativityReportGeneratorService
     {
-        public List<Author> GetAllAuthors(string path, DateTime date)
+        public string CurrentService => nameof(LocalCreativityReportGenaratorService);
+
+        public List<string> GetAllAuthors(string path, DateTime date)
         {
             using (var repo = new Repository(@$"{path}"))
             {
                 return GetCommitsByDate(repo, date)
                     .OrderBy(com => com.Author.Name)
-                    .Select(com => new Author
-                    {
-                        Name = com.Author.Name,
-                        Email = com.Author.Email
-                    })
+                    .Select(com => $"{com.Author.Name} <{com.Author.Email}>")
                     .Distinct()
                     .ToList();
             }
@@ -65,7 +63,7 @@ namespace CreativityReportGenerator.Services
             var commitsByDate = GetCommitsByDate(repo, date);
 
             return commitsByDate
-                .Where(com => com.Author.Name == userName)
+                .Where(com => $"{com.Author.Name} <{com.Author.Email}>" == userName)
                 .OrderBy(com => com.Author.When)
                 .GroupBy(com => com.Sha)
                 .Select(id => id.FirstOrDefault())

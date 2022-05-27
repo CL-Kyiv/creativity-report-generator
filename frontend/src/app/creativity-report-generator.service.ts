@@ -26,12 +26,12 @@ export class CreativityReportGeneratorService {
     return this.http.get<CreativityReportItem[]>(this.APIUrl, { params: params, responseType: 'json'} );
   }
 
-  getAllAuthors(path : string, date : string): Observable<Author[]> {
+  getAllAuthors(path : string, date : string): Observable<string[]> {
     let params = new HttpParams();
     params = params.append('path', path);
     params = params.append('date', date);
 
-    return this.http.get<Author[]>(this.APIUrl + '/authors', { params: params, responseType: 'json'} );
+    return this.http.get<string[]>(this.APIUrl + '/authors', { params: params, responseType: 'json'} );
   }
 
   getMergeCommitsByAuthorAndDate(date : string, userName :  string, path : string): Observable<string[]> {

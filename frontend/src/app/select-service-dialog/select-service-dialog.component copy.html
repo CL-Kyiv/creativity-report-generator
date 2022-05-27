@@ -1,0 +1,10 @@
+<div>
+    <label class = "" for="headerName">Enter header name:</label><br><br>
+    <input type="text" id="headerName"  #headerName name="headerName"><br><br>
+</div>
+<div>
+    <button class="button-add-column" (click)="onCreateColumn(headerName.value)">Create column</button>
+    <button class="button-close-editind" (click)="onClose()">Cancel</button>
+</div>
+    
+
