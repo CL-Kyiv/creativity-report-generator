@@ -1,62 +1,63 @@
-  
-<form [formGroup]="getAuthorsForm" (ngSubmit)="onSelectPath(path.value, selectedDate.value)">
-  <div class="input-div">
-    <label for="date">Select month and year:</label>&nbsp;
-    <input type="month" required id="date" formControlName="selectedDate" [formControl] = "selectedDate">
-  </div>
-
-  <div class="input-div"> 
-    <label for="path">Enter path:</label>&nbsp;
-    <input type="text" required id="path" formControlName="path" #path name="path">
-    <button class="button-get-authors" type="submit" [disabled]="getAuthorsForm.invalid">Enter</button>
-    <span *ngIf="!isSelectedPath">  {{messageError}}</span>
-  </div>
-</form>
-<div *ngIf="isSelectedPath">
-  <form [formGroup]="generateForm" (ngSubmit)="onGenerate(selectedDate.value, start.value, end.value)">
+<div *ngIf="!isSelectServiceDialogOpen">
+  <form [formGroup]="getAuthorsForm" (ngSubmit)="onSelectPath(path.value, selectedDate.value)">
     <div class="input-div">
-      Choose working hours: <input type="number" required formControlName="start" min="0" max="23" #start placeholder="0"> -
-          <input type="number" required formControlName="end" min="0" max="23" #end placeholder="0">
+      <label for="date">Select month and year:</label>&nbsp;
+      <input type="month" required id="date" formControlName="selectedDate" [formControl] = "selectedDate">
     </div>
 
-    <div class="input-div">
-      <div class="div-loader" *ngIf="isSelectAuthorsRequestInProgress">
-        <label for="loader">Select author:</label>&nbsp;
-        <div class="loader" id="loader"></div>  
-      </div>
-      <div *ngIf="!isSelectAuthorsRequestInProgress">
-        <label for="author">Select author:</label>&nbsp;
-        <select required formControlName="author" [formControl] = "author" id="author">
-          <option *ngFor="let author of allAuthors" [value]="author.name">{{author.name}} ({{author.email}})</option>
-        </select>
-      </div>
-    </div> 
-      <button class="button-generate" type="submit" [disabled]="generateForm.invalid">Generate</button> 
+    <div class="input-div"> 
+      <label for="path">Enter path:</label>&nbsp;
+      <input type="text" required id="path" formControlName="path" #path name="path">
+      <button class="button-get-authors" type="submit" [disabled]="getAuthorsForm.invalid">Enter</button>
+      <span *ngIf="!isSelectedPath">  {{messageError}}</span>
+    </div>
   </form>
-</div>
+  <div *ngIf="isSelectedPath">
+    <form [formGroup]="generateForm" (ngSubmit)="onGenerate(selectedDate.value, start.value, end.value)">
+      <div class="input-div">
+        Choose working hours: <input type="number" required formControlName="start" min="0" max="23" #start placeholder="0"> -
+            <input type="number" required formControlName="end" min="0" max="23" #end placeholder="0">
+      </div>
 
-<div *ngIf="isGenerate">
-  <div class="div-merge-commits-selection-changed">
-    <input class="checkbox-merge-commits-selection" type="checkbox"  id="mergeCommits" (change)="onHideMergeCommits($event)">
-    <label for="mergeCommits">Hide merge commits</label>
-  </div>
-  
-  <ag-grid-angular
-      class = "ag-theme-balham ag-grid"
-      [columnDefs] = "columnDefs"
-      [rowData] = "rowData"
-      [defaultColDef]= "defaultColDef"
-      [rowHeight] = "50"
-      [isExternalFilterPresent]= "isExternalFilterPresent"
-      [frameworkComponents]="frameworkComponents"
-      [doesExternalFilterPass]= "doesExternalFilterPass"
-      rowSelection="multiple"
-      [suppressRowClickSelection] = "true"
-      (gridReady) = "onGridReady($event)"
-  ></ag-grid-angular>
+      <div class="input-div">
+        <div class="div-loader" *ngIf="isSelectAuthorsRequestInProgress">
+          <label for="loader">Select author:</label>&nbsp;
+          <div class="loader" id="loader"></div>  
+        </div>
+        <div *ngIf="!isSelectAuthorsRequestInProgress">
+          <label for="author">Select author:</label>&nbsp;
+          <select required formControlName="author" [formControl] = "author" id="author">
+            <option *ngFor="let author of allAuthors" [value]="author">{{author}})</option>
+          </select>
+        </div>
+      </div> 
+        <button class="button-generate" type="submit" [disabled]="generateForm.invalid">Generate</button> 
+    </form>
 
-  <div>
-    <button class="button-create-column" (click)="openAddDialog()">Create new column</button>
-    <button class="button-export" (click)="onBtnExport()">Download CSV export file</button>
+    <div *ngIf="isGenerate">
+      <div class="div-merge-commits-selection-changed">
+        <input class="checkbox-merge-commits-selection" type="checkbox"  id="mergeCommits" (change)="onHideMergeCommits($event)">
+        <label for="mergeCommits">Hide merge commits</label>
+      </div>
+      
+      <ag-grid-angular
+          class = "ag-theme-balham ag-grid"
+          [columnDefs] = "columnDefs"
+          [rowData] = "rowData"
+          [defaultColDef]= "defaultColDef"
+          [rowHeight] = "50"
+          [isExternalFilterPresent]= "isExternalFilterPresent"
+          [frameworkComponents]="frameworkComponents"
+          [doesExternalFilterPass]= "doesExternalFilterPass"
+          rowSelection="multiple"
+          [suppressRowClickSelection] = "true"
+          (gridReady) = "onGridReady($event)"
+      ></ag-grid-angular>
+
+      <div>
+        <button class="button-create-column" (click)="openAddDialog()">Create new column</button>
+        <button class="button-export" (click)="onBtnExport()">Download CSV export file</button>
+      </div>
+    </div>
   </div>
 </div>

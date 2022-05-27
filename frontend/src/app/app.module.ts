@@ -8,14 +8,16 @@ import { CreativityReportGeneratorService } from './creativity-report-generator.
 import { AppComponent } from './app.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { ColumnAddDialogComponent } from './column-add-dialog.component/column-add-dialog.component';
+import { ColumnAddDialogComponent } from './column-add-dialog/column-add-dialog.component';
 import { CustomDateComponent } from './custom-date-component.component';
+import { SelectServiceDialogComponent } from './select-service-dialog/select-service-dialog.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     ColumnAddDialogComponent,
-    CustomDateComponent
+    CustomDateComponent,
+    SelectServiceDialogComponent
   ],
   imports: [
     BrowserModule,

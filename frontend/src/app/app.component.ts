@@ -4,8 +4,9 @@ import { filter, Observable, map, catchError, of } from 'rxjs';
 import { GridApi } from 'ag-grid-community';
 import { CreativityReportItem } from './creativity-report-item';
 import { MatDialog } from '@angular/material/dialog';
-import { CreativityReportGeneratorService } from './creativity-report-generator.service'
-import { ColumnAddDialogComponent } from './column-add-dialog.component/column-add-dialog.component';
+import { CreativityReportGeneratorService } from './creativity-report-generator.service';
+import { SelectServiceDialogComponent } from './select-service-dialog/select-service-dialog.component';
+import { ColumnAddDialogComponent } from './column-add-dialog/column-add-dialog.component';
 import { Author } from './author-type';
 import { CustomDateComponent } from './custom-date-component.component';
 import { FormControl, FormBuilder } from '@angular/forms';
@@ -17,7 +18,7 @@ import { FormControl, FormBuilder } from '@angular/forms';
 })
 export class AppComponent {
   gridApi: GridApi;
-  allAuthors : Author[];
+  allAuthors : string[];
   path : string;
   rowData: CreativityReportItem[];
   isGenerate : boolean = false;
@@ -31,6 +32,8 @@ export class AppComponent {
   author = new FormControl();
   isSelectedPath : boolean = false;
   isMessageError : boolean = false;
+  isSelectServiceDialogOpen : boolean = true;
+  isSelectedBitbucket : boolean;
 
   generateForm = this.formBuilder.group({
     path: '',
@@ -48,6 +51,7 @@ export class AppComponent {
   constructor(private service: CreativityReportGeneratorService,
     private matDialog: MatDialog,
     private formBuilder: FormBuilder) {
+      this.openSelectServiceDialog();
       this.defaultColDef = {
         flex: 1,
         minWidth: 50,
@@ -179,6 +183,17 @@ export class AppComponent {
     });
     dialogRef.afterClosed().pipe(filter(r => r.isAdded)).subscribe((r) => {
       this.onAddColumn(r.headerName);
+    });
+  }
+
+  openSelectServiceDialog() {
+    const dialogRef = this.matDialog.open(SelectServiceDialogComponent, {
+      height: '300px',
+      width: '600px',
+    });
+    dialogRef.afterClosed().subscribe((s) => {
+      this.isSelectServiceDialogOpen = false;
+      this.isSelectedBitbucket = s.isSelectedBitbucket;
     });
   }
 
