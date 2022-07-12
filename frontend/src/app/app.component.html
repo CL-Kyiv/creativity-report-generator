@@ -1,13 +1,13 @@
 <div *ngIf="!isSelectServiceDialogOpen">
-  <form [formGroup]="getAuthorsForm" (ngSubmit)="onSelectPath(path.value, selectedDate.value)">
+  <div class="input-div">
+    <button class="get-path-button" (click)="getDirectoryPath()">
+      Choose directory
+    </button>
+ </div>
+  <form [formGroup]="getAuthorsForm" (ngSubmit)="onSelectPath(selectedDate.value)">
     <div class="input-div">
       <label for="date">Select month and year:</label>&nbsp;
       <input type="month" required id="date" formControlName="selectedDate" [formControl] = "selectedDate">
-    </div>
-
-    <div class="input-div"> 
-      <label for="path">Enter path:</label>&nbsp;
-      <input type="text" required id="path" formControlName="path" #path name="path">
       <button class="button-get-authors" type="submit" [disabled]="getAuthorsForm.invalid">Enter</button>
       <span *ngIf="!isSelectedPath">  {{messageError}}</span>
     </div>

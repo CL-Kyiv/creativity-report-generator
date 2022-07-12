@@ -1,9 +1,10 @@
+import { HttpClientModule, HttpClient } from '@angular/common/http';
+import { CoreModule } from './core/core.module';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AgGridModule } from 'ag-grid-angular';
 import { MatSelectModule } from '@angular/material/select';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { HttpClientModule } from '@angular/common/http';
 import { CreativityReportGeneratorService } from './creativity-report-generator.service'
 import { AppComponent } from './app.component';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -12,24 +13,37 @@ import { ColumnAddDialogComponent } from './column-add-dialog/column-add-dialog.
 import { CustomDateComponent } from './custom-date-component.component';
 import { SelectServiceDialogComponent } from './select-service-dialog/select-service-dialog.component';
 
+// NG Translate
+import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+
+// AoT requires an exported function for factories
+const httpLoaderFactory = (http: HttpClient): TranslateHttpLoader => new TranslateHttpLoader(http, './assets/i18n/', '.json');
+
 @NgModule({
-  declarations: [
-    AppComponent,
+  declarations: [AppComponent,
     ColumnAddDialogComponent,
     CustomDateComponent,
-    SelectServiceDialogComponent
-  ],
+    SelectServiceDialogComponent],
   imports: [
     BrowserModule,
-    HttpClientModule,
     AgGridModule.withComponents([CustomDateComponent]),
     BrowserAnimationsModule,
-    FormsModule,
     ReactiveFormsModule,
     MatSelectModule,
-    MatDialogModule
+    MatDialogModule,
+    FormsModule,
+    HttpClientModule,
+    CoreModule,
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: httpLoaderFactory,
+        deps: [HttpClient]
+      }
+    })
   ],
-  providers: [CreativityReportGeneratorService,],
+  providers: [CreativityReportGeneratorService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

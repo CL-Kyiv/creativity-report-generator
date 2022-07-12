@@ -1,3 +1,6 @@
+import { ElectronService } from './core/services';
+import { TranslateService } from '@ngx-translate/core';
+import { APP_CONFIG } from '../environments/environment';
 import { Component, ViewChild, ElementRef } from '@angular/core';
 import { ColDef, IFilterDef } from 'ag-grid-community';
 import { filter, Observable, map, catchError, of } from 'rxjs';
@@ -14,12 +17,14 @@ import { FormControl, FormBuilder } from '@angular/forms';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css'],
+  styleUrls: ['./app.component.css']
 })
 export class AppComponent {
+
+  path: string | null = null;
+
   gridApi: GridApi;
   allAuthors : string[];
-  path : string;
   rowData: CreativityReportItem[];
   isGenerate : boolean = false;
   isHideMergeCommits : boolean = false;
@@ -48,10 +53,14 @@ export class AppComponent {
     selectedDate: this.selectedDate
   });
 
-  constructor(private service: CreativityReportGeneratorService,
+  constructor(
+    private electronService: ElectronService,
+    private translate: TranslateService,
+    private service: CreativityReportGeneratorService,
     private matDialog: MatDialog,
     private formBuilder: FormBuilder) {
-      this.openSelectServiceDialog();
+    this.translate.setDefaultLang('en');
+    this.openSelectServiceDialog();
       this.defaultColDef = {
         flex: 1,
         minWidth: 50,
@@ -64,6 +73,21 @@ export class AppComponent {
         }  
       };
       this.frameworkComponents = { agDateInput: CustomDateComponent };
+  }
+
+
+  ngOnInit() {
+    console.log(this.path)
+    this.electronService.ipcRenderer.on('file', (event, file) => {
+      this.path = file
+    })
+  }
+  getDirectoryPath() {
+    this.electronService.ipcRenderer.send('open-file-dialog')
+  }
+
+  ngOnDestroy() {
+    this.electronService.ipcRenderer.removeAllListeners('file')
   }
   
   onGridReady(params: any) {
@@ -143,12 +167,11 @@ export class AppComponent {
     },
   ];
 
-  onSelectPath(path : string, date : string){
+  onSelectPath(date : string){
     this.isSelectedPath = true;
     this.isSelectAuthorsRequestInProgress = true;
-    this.path = path;
     this.service
-      .getAllAuthors(path, date)
+      .getAllAuthors(this.path, date)
       .pipe(
         catchError(error => {
           this.messageError = error.error;

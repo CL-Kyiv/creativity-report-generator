@@ -24,7 +24,7 @@ import flatpickr from "flatpickr";
 
            .custom-date-filter:after { 
                position: absolute;
-               content: '073';
+               content: '';
                display: block;
                font-weight: 400;
                font-family: 'Font Awesome 5 Free';
