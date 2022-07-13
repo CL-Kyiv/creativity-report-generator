@@ -1,24 +1,36 @@
+.get-path-button {
+    margin-top: 0.5%;
+    height:30px; 
+    width: 130px;
+}
+
+.another-path-button {
+    margin-top: 0.5%;
+    height:30px; 
+    width: 140px;
+}
+
 .ag-grid{
-    margin-left: 1%;
-    width: 90%; 
-    height: 600px; 
-    font-size: 20px;
+    margin-left: 7%;
+    width: 85%; 
+    height: 400px; 
+    font-size: 15px;
     margin-top: 0.5%;
 }
 .button-generate{
     margin-top:  1%;
-    height:50px; 
+    height:30px; 
     width:100px;
     margin-left: 2%;
 }
 .button-export{
     margin-left: 1%;
     margin-top: 1%;
-    height:50px; 
-    width:250px;
+    height:30px; 
+    width:150px;
 }
 div{
-    font-size: 18px; 
+    font-size: 15px; 
 }
 .input-div {
     margin-left: 2%;
@@ -27,20 +39,21 @@ div{
 .button-create-column{
     margin-left: 65%;
     margin-top: 1%;
-    height:50px; 
-    width:200px;
+    height:30px; 
+    width:150px;
 }
 .button-select-path{
     margin-top: 0.5%;
-    height:50px; 
+    height:30px; 
     width:150px;
 }
 .div-merge-commits-selection-changed{
     margin-left: 2%;
     margin-top: 2%;
-    font-size: 20px; 
+    font-size: 15px; 
 }
 .checkbox-merge-commits-selection{
+    margin-left: 7%;
     height:17px; 
     width:17px;
     margin-right: 0.5%;
@@ -67,8 +80,8 @@ div{
 
 }
 .button-get-authors{
-    height: 40px;
-    width: 70px;
+    height: 30px;
+    width: 50px;
     margin-left: 1%;
 }
 

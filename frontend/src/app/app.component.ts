@@ -1,11 +1,13 @@
-import { Component, ViewChild, ElementRef } from '@angular/core';
+import { ElectronService } from './core/services';
+import { TranslateService } from '@ngx-translate/core';
+import { APP_CONFIG } from '../environments/environment';
+import { Component, NgZone, ElementRef } from '@angular/core';
 import { ColDef, IFilterDef } from 'ag-grid-community';
 import { filter, Observable, map, catchError, of } from 'rxjs';
 import { GridApi } from 'ag-grid-community';
 import { CreativityReportItem } from './creativity-report-item';
 import { MatDialog } from '@angular/material/dialog';
 import { CreativityReportGeneratorService } from './creativity-report-generator.service';
-import { SelectServiceDialogComponent } from './select-service-dialog/select-service-dialog.component';
 import { ColumnAddDialogComponent } from './column-add-dialog/column-add-dialog.component';
 import { Author } from './author-type';
 import { CustomDateComponent } from './custom-date-component.component';
@@ -14,12 +16,14 @@ import { FormControl, FormBuilder } from '@angular/forms';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css'],
+  styleUrls: ['./app.component.css']
 })
 export class AppComponent {
+
+  path: string | null = null;
+
   gridApi: GridApi;
   allAuthors : string[];
-  path : string;
   rowData: CreativityReportItem[];
   isGenerate : boolean = false;
   isHideMergeCommits : boolean = false;
@@ -32,8 +36,6 @@ export class AppComponent {
   author = new FormControl();
   isSelectedPath : boolean = false;
   isMessageError : boolean = false;
-  isSelectServiceDialogOpen : boolean = true;
-  isSelectedBitbucket : boolean;
 
   generateForm = this.formBuilder.group({
     path: '',
@@ -48,10 +50,19 @@ export class AppComponent {
     selectedDate: this.selectedDate
   });
 
-  constructor(private service: CreativityReportGeneratorService,
+  constructor(
+    private electronService: ElectronService,
+    private ngZone: NgZone,
+    private translate: TranslateService,
+    private service: CreativityReportGeneratorService,
     private matDialog: MatDialog,
     private formBuilder: FormBuilder) {
-      this.openSelectServiceDialog();
+    this.electronService.ipcRenderer.on('file', (event, file) => {
+        this.ngZone.run(() => {
+          this.path = file;
+        })
+      })
+    this.translate.setDefaultLang('en');
       this.defaultColDef = {
         flex: 1,
         minWidth: 50,
@@ -64,6 +75,17 @@ export class AppComponent {
         }  
       };
       this.frameworkComponents = { agDateInput: CustomDateComponent };
+  }
+
+
+  ngOnInit() {
+  }
+  getDirectoryPath() {
+    this.electronService.ipcRenderer.send('open-file-dialog')
+  }
+
+  ngOnDestroy() {
+    this.electronService.ipcRenderer.removeAllListeners('file')
   }
   
   onGridReady(params: any) {
@@ -143,12 +165,11 @@ export class AppComponent {
     },
   ];
 
-  onSelectPath(path : string, date : string){
+  onSelectPath(date : string){
     this.isSelectedPath = true;
     this.isSelectAuthorsRequestInProgress = true;
-    this.path = path;
     this.service
-      .getAllAuthors(path, date)
+      .getAllAuthors(this.path, date)
       .pipe(
         catchError(error => {
           this.messageError = error.error;
@@ -183,17 +204,6 @@ export class AppComponent {
     });
     dialogRef.afterClosed().pipe(filter(r => r.isAdded)).subscribe((r) => {
       this.onAddColumn(r.headerName);
-    });
-  }
-
-  openSelectServiceDialog() {
-    const dialogRef = this.matDialog.open(SelectServiceDialogComponent, {
-      height: '300px',
-      width: '600px',
-    });
-    dialogRef.afterClosed().subscribe((s) => {
-      this.isSelectServiceDialogOpen = false;
-      this.isSelectedBitbucket = s.isSelectedBitbucket;
     });
   }
 
