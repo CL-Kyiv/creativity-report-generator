@@ -8,7 +8,7 @@ import flatpickr from "flatpickr";
    selector: 'app-custom-date',
    template: `
      <div #flatpickrEl class="ag-input-wrapper custom-date-filter" role="presentation">
-     <input type="text" #eInput data-input placeholder="  Select date..." style="width: 100%;"/>
+     <input type="text" #eInput data-input style="width: 100%;"/>
      <a class='input-button' title='clear' data-clear>
        <i class='fa fa-times'></i>
      </a>

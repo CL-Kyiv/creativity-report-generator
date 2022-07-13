@@ -1,14 +1,13 @@
 import { ElectronService } from './core/services';
 import { TranslateService } from '@ngx-translate/core';
 import { APP_CONFIG } from '../environments/environment';
-import { Component, ViewChild, ElementRef } from '@angular/core';
+import { Component, NgZone, ElementRef } from '@angular/core';
 import { ColDef, IFilterDef } from 'ag-grid-community';
 import { filter, Observable, map, catchError, of } from 'rxjs';
 import { GridApi } from 'ag-grid-community';
 import { CreativityReportItem } from './creativity-report-item';
 import { MatDialog } from '@angular/material/dialog';
 import { CreativityReportGeneratorService } from './creativity-report-generator.service';
-import { SelectServiceDialogComponent } from './select-service-dialog/select-service-dialog.component';
 import { ColumnAddDialogComponent } from './column-add-dialog/column-add-dialog.component';
 import { Author } from './author-type';
 import { CustomDateComponent } from './custom-date-component.component';
@@ -37,8 +36,6 @@ export class AppComponent {
   author = new FormControl();
   isSelectedPath : boolean = false;
   isMessageError : boolean = false;
-  isSelectServiceDialogOpen : boolean = true;
-  isSelectedBitbucket : boolean;
 
   generateForm = this.formBuilder.group({
     path: '',
@@ -55,12 +52,17 @@ export class AppComponent {
 
   constructor(
     private electronService: ElectronService,
+    private ngZone: NgZone,
     private translate: TranslateService,
     private service: CreativityReportGeneratorService,
     private matDialog: MatDialog,
     private formBuilder: FormBuilder) {
+    this.electronService.ipcRenderer.on('file', (event, file) => {
+        this.ngZone.run(() => {
+          this.path = file;
+        })
+      })
     this.translate.setDefaultLang('en');
-    this.openSelectServiceDialog();
       this.defaultColDef = {
         flex: 1,
         minWidth: 50,
@@ -77,10 +79,6 @@ export class AppComponent {
 
 
   ngOnInit() {
-    console.log(this.path)
-    this.electronService.ipcRenderer.on('file', (event, file) => {
-      this.path = file
-    })
   }
   getDirectoryPath() {
     this.electronService.ipcRenderer.send('open-file-dialog')
@@ -206,17 +204,6 @@ export class AppComponent {
     });
     dialogRef.afterClosed().pipe(filter(r => r.isAdded)).subscribe((r) => {
       this.onAddColumn(r.headerName);
-    });
-  }
-
-  openSelectServiceDialog() {
-    const dialogRef = this.matDialog.open(SelectServiceDialogComponent, {
-      height: '300px',
-      width: '600px',
-    });
-    dialogRef.afterClosed().subscribe((s) => {
-      this.isSelectServiceDialogOpen = false;
-      this.isSelectedBitbucket = s.isSelectedBitbucket;
     });
   }
 

@@ -11,7 +11,6 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ColumnAddDialogComponent } from './column-add-dialog/column-add-dialog.component';
 import { CustomDateComponent } from './custom-date-component.component';
-import { SelectServiceDialogComponent } from './select-service-dialog/select-service-dialog.component';
 
 // NG Translate
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
@@ -23,8 +22,7 @@ const httpLoaderFactory = (http: HttpClient): TranslateHttpLoader => new Transla
 @NgModule({
   declarations: [AppComponent,
     ColumnAddDialogComponent,
-    CustomDateComponent,
-    SelectServiceDialogComponent],
+    CustomDateComponent],
   imports: [
     BrowserModule,
     AgGridModule.withComponents([CustomDateComponent]),
