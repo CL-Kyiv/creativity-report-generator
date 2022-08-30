@@ -12,6 +12,8 @@ import { ColumnAddDialogComponent } from './column-add-dialog/column-add-dialog.
 import { Author } from './author-type';
 import { CustomDateComponent } from './custom-date-component.component';
 import { FormControl, FormBuilder } from '@angular/forms';
+import { CustomHeaderComponent } from './custom-header/custom-header.component';
+import { HeaderComponent } from '@ag-grid-community/core/dist/cjs/components/framework/componentTypes';
 
 @Component({
   selector: 'app-root',
@@ -19,34 +21,33 @@ import { FormControl, FormBuilder } from '@angular/forms';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-
-  path: string | null = null;
-
-  gridApi: GridApi;
-  allAuthors : string[];
-  rowData: CreativityReportItem[];
-  isGenerate : boolean = false;
-  isHideMergeCommits : boolean = false;
-  mergeCommitsIds: string[];
   public frameworkComponents;
   public defaultColDef;
-  selectedDate = new FormControl();
+  gridApi: GridApi;
   messageError : string;
-  isSelectAuthorsRequestInProgress : boolean = false;
+  path: string | null = null;
+  selectedDate = new FormControl();
   author = new FormControl();
+  startWorkingHours = new FormControl();
+  endWorkingHours = new FormControl();
   isSelectedPath : boolean = false;
   isMessageError : boolean = false;
+  isGenerate : boolean = false;
+  isHideMergeCommits : boolean = false;
+  isSelectAuthorsRequestInProgress : boolean = false;
+  isGitRepo : boolean = true;
+  allAuthors : string[];
+  rowData: CreativityReportItem[];
+  mergeCommitsIds: string[];
 
   generateForm = this.formBuilder.group({
-    path: '',
     selectedDate: this.selectedDate,
     author: this.author,
-    start: '',
-    end: ''
+    startWorkingHours: this.startWorkingHours,
+    endWorkingHours: this.endWorkingHours
   });
 
   getAuthorsForm = this.formBuilder.group({
-    path: '',
     selectedDate: this.selectedDate
   });
 
@@ -57,9 +58,12 @@ export class AppComponent {
     private service: CreativityReportGeneratorService,
     private matDialog: MatDialog,
     private formBuilder: FormBuilder) {
-    this.electronService.ipcRenderer.on('file', (event, file) => {
+    this.electronService.ipcRenderer.on('file', (event, file, isGitRepo) => {
         this.ngZone.run(() => {
+          this.onReset();
+          console.log(file)
           this.path = file;
+          this.isGitRepo = isGitRepo;
         })
       })
     this.translate.setDefaultLang('en');
@@ -72,7 +76,8 @@ export class AppComponent {
           'height': '100%',
           'display': 'flex ',
           'align-items': 'center ',
-        }  
+        },
+        resizable: true
       };
       this.frameworkComponents = { agDateInput: CustomDateComponent };
   }
@@ -80,8 +85,26 @@ export class AppComponent {
 
   ngOnInit() {
   }
+
   getDirectoryPath() {
     this.electronService.ipcRenderer.send('open-file-dialog')
+  }
+
+  onReset() {
+    this.allAuthors = null;
+    this.author.setValue(null);
+    this.isGitRepo = true;
+    this.isHideMergeCommits = false;
+    this.isGenerate = false;
+    this.mergeCommitsIds = null;
+    this.isHideMergeCommits = false;
+    this.isSelectAuthorsRequestInProgress = false;
+    this.isSelectedPath = false;
+    this.selectedDate.setValue(null);
+    this.startWorkingHours.setValue(null);
+    this.endWorkingHours.setValue(null);
+    this.rowData = undefined;
+    this.gridApi = null;
   }
 
   ngOnDestroy() {
@@ -183,8 +206,22 @@ export class AppComponent {
       });
   }
 
-  onGenerate(date : string, startWorkingHours : string, endWorkingHours : string){
-    this.service.getCreativityReportItems(date, this.author.value, this.path, startWorkingHours, endWorkingHours).subscribe(data => this.rowData = data);
+  onGenerate(date : string){
+    this.isGenerate = false;
+
+    if(this.gridApi)
+      this.gridApi.showLoadingOverlay();
+
+    this.service.getCreativityReportItems(
+      date, 
+      this.author.value, 
+      this.path, 
+      this.startWorkingHours.value, 
+      this.endWorkingHours.value).subscribe(
+        data => {
+          this.rowData = data;
+          if(this.gridApi)
+            this.gridApi.hideOverlay()});
 
     this.service.getMergeCommitsByAuthorAndDate(date, this.author.value, this.path).subscribe(ids => {
       this.mergeCommitsIds = ids;
@@ -201,6 +238,9 @@ export class AppComponent {
     const dialogRef = this.matDialog.open(ColumnAddDialogComponent, {
       height: '200px',
       width: '350px',
+      data: {
+        ColumnDefs: this.columnDefs,
+      },
     });
     dialogRef.afterClosed().pipe(filter(r => r.isAdded)).subscribe((r) => {
       this.onAddColumn(r.headerName);
@@ -214,9 +254,29 @@ export class AppComponent {
       field : headerName.toLocaleLowerCase(),
       minWidth : 50,
       editable: true,
-      flex : 1
+      flex : 2,
+      headerComponentParams: {
+        headerName: headerName,
+        callback : (headerName : string) => {
+          this.onDeleteColumn(headerName);
+        }
+      },
+      headerComponentFramework : CustomHeaderComponent
     });
     this.gridApi.setColumnDefs(this.columnDefs);
+  }
+
+  onDeleteColumn(headerName : string){
+    var index;
+    this.columnDefs.forEach((value : ColDef) => {
+      if(value.field === headerName.toLocaleLowerCase()){
+        index = this.columnDefs.indexOf(value);
+      }
+    })
+    if(index > -1){
+      this.columnDefs.splice(index, 1);
+      this.gridApi.setColumnDefs(this.columnDefs);
+    }
   }
 
   onHideMergeCommits(event : any){

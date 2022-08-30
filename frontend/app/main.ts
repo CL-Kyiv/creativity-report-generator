@@ -32,9 +32,9 @@ function createWindow(): BrowserWindow {
     // Path when running electron executable
     let pathIndex = './index.html';
 
-    if (fs.existsSync(path.join(__dirname, '../dist/index.html'))) {
+    if (fs.existsSync(path.join(__dirname, '../src/index.html'))) {
       // Path when running electron in local folder
-      pathIndex = '../dist/index.html';
+      pathIndex = '../src/index.html';
     }
 
     win.loadURL(url.format({
@@ -47,8 +47,13 @@ function createWindow(): BrowserWindow {
     dialog.showOpenDialog({ properties: ['openDirectory'] })
       .then((result) => {
         const filepath = result.filePaths[0].toString();
-        event.reply('file', filepath);
-        console.log("REPLIED")
+        if(fs.existsSync(path.join(filepath, '\.git'))){
+          event.reply('file', filepath, true);
+          console.log("REPLIED")
+        }
+        else{
+          event.reply('file', undefined, false);
+        }
       })
   })
 

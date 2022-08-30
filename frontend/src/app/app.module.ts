@@ -15,6 +15,8 @@ import { CustomDateComponent } from './custom-date-component.component';
 // NG Translate
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { CustomHeaderComponent } from './custom-header/custom-header.component';
+import { FontAwesomeModule  } from '@fortawesome/angular-fontawesome';
 
 // AoT requires an exported function for factories
 const httpLoaderFactory = (http: HttpClient): TranslateHttpLoader => new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -22,7 +24,8 @@ const httpLoaderFactory = (http: HttpClient): TranslateHttpLoader => new Transla
 @NgModule({
   declarations: [AppComponent,
     ColumnAddDialogComponent,
-    CustomDateComponent],
+    CustomDateComponent,
+    CustomHeaderComponent],
   imports: [
     BrowserModule,
     AgGridModule.withComponents([CustomDateComponent]),
@@ -30,6 +33,7 @@ const httpLoaderFactory = (http: HttpClient): TranslateHttpLoader => new Transla
     ReactiveFormsModule,
     MatSelectModule,
     MatDialogModule,
+    FontAwesomeModule,
     FormsModule,
     HttpClientModule,
     CoreModule,

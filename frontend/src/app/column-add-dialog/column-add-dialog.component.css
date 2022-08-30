@@ -1,14 +1,11 @@
-
 .button-add-column{
     margin-left: 10%;
-    margin-top: 1%;
-    height: 45px; 
+    height: 35px; 
     width:125px;
 }
 .button-close-editind{
     margin-left: 3%;
-    margin-top: 1%;
-    height: 45px; 
+    height: 35px; 
     width: 100px;
 }
 input{
@@ -16,4 +13,20 @@ input{
 }
 label{
     font-size: 20px;
+}
+.size-for-lebel{
+    margin-left: 10%;
+    margin-top: 1%;
+}
+.size-for-input{
+    margin-left: 10%;
+    margin-top: 1%;
+}
+.is-not-valid-header-name{
+    margin-left: 10%;
+    font-size: 10px;
+    color: red;
+}
+.button-div{
+    margin-top: 4%;
 }
