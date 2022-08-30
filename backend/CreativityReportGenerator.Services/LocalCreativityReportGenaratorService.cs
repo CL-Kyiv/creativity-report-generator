@@ -72,6 +72,8 @@ namespace CreativityReportGenerator.Services
 
         public int CalculateCreativeTime(Commit com, Commit previousCom, int startWorkingHours, int endWorkingHours)
         {
+            int workingHoursPerDay;
+
             double hours = 0;
 
             if (com.Parents.Count() > 1)
@@ -79,24 +81,50 @@ namespace CreativityReportGenerator.Services
                 return (int)hours;
             }
 
+            if (startWorkingHours <= endWorkingHours)
+            {
+                workingHoursPerDay = endWorkingHours - startWorkingHours;
+            }
+            else
+            {
+                workingHoursPerDay = endWorkingHours + 24 - startWorkingHours;
+            }
+
             if (previousCom == null)
             { 
-                hours = endWorkingHours - startWorkingHours;
+                hours = workingHoursPerDay;
             }
             else
             {
                 var start = previousCom.Author.When;
                 var end = com.Author.When;
-
-                while (start < end)
+                if(startWorkingHours <= endWorkingHours)
                 {
-                    start = start.AddHours(1);
-                    if (start.Hour > startWorkingHours &&
-                       start.Hour < endWorkingHours &&
-                       start.DayOfWeek != DayOfWeek.Saturday &&
-                       start.DayOfWeek != DayOfWeek.Sunday)
+                    while (start < end)
                     {
-                        hours++;
+                        start = start.AddHours(1);
+                        if (start.Hour > startWorkingHours &&
+                           start.Hour <= endWorkingHours &&
+                           start.DayOfWeek != DayOfWeek.Saturday &&
+                           start.DayOfWeek != DayOfWeek.Sunday)
+                        {
+                            hours++;
+                        }
+                    }
+                }
+                else
+                {
+                    while (start < end)
+                    {
+                        start = start.AddHours(1);
+                        if ((start.Hour > startWorkingHours &&
+                           start.Hour <= 24) || (start.Hour >= 0 &&
+                           start.Hour <= endWorkingHours) &&
+                           start.DayOfWeek != DayOfWeek.Saturday &&
+                           start.DayOfWeek != DayOfWeek.Sunday)
+                        {
+                            hours++;
+                        }
                     }
                 }
             }
