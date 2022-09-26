@@ -28,6 +28,7 @@ This file is a script that runs the web api and electron application in differen
 5) Select the tasks that will be included in the report of creativity.
 
 6) Click on the "Export file" button to download the csv file.
+
 ## File structure
 
 ```
