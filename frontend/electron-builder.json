@@ -1,7 +1,7 @@
 {
   "asar": false,
   "directories": {
-    "output": "release/"
+    "output": "../CreativityReportGenerator/electron/"
   },
   "files": [
     "**/*",
@@ -21,6 +21,7 @@
   ],
   "win": {
     "icon": "dist/assets/icons",
+    "artifactName": "${name}-${version}.${ext}",
     "target": [
       "portable"
     ]

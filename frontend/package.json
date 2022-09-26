@@ -1,6 +1,6 @@
 {
   "name": "creativity-report-generator",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "main": "app/main.js",
   "private": true,
   "scripts": {
@@ -24,18 +24,6 @@
     "version": "conventional-changelog -i CHANGELOG.md -s -r 0 && git add CHANGELOG.md",
     "lint": "ng lint",
     "dist": "electron-builder"
-  },
-  "build": {
-    "appId": "creativity.report.generator",
-    "productName": "Creativity Report Generator",
-    "directories": {
-      "output": "build"
-    },
-    "target": "NSIS",
-    "nsis": {
-      "allowToChangeInstallationDirectory": true,
-      "oneClick": false
-    }
   },
   "dependencies": {
     "@ag-grid-community/angular": "^26.2.0",

@@ -1,8 +1,10 @@
 ﻿using CreativityReportGenerator.Services.Abstractions;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 
@@ -18,9 +20,11 @@ namespace CreativityReportGenerator.WebAPI.Controllers
 
         public CreativityReportGeneratorController(IEnumerable<ICreativityReportGeneratorService> creativityReportGeneratorServices, IOptions<AppSettings> settings)
         {
+          //  Debugger.Launch();
             _creativityReportGeneratorServices = creativityReportGeneratorServices;
 
             AppSettings = settings.Value;
+          //  Debugger.Break();
         }
 
         [HttpGet("authors")]
@@ -30,7 +34,7 @@ namespace CreativityReportGenerator.WebAPI.Controllers
             //{
             //    return BadRequest("wrong path");
             //}
-
+            
             return Ok(_creativityReportGeneratorServices
                 .FirstOrDefault(s => s.CurrentService == AppSettings.CurrentService)
                 .GetAllAuthors(path, date));
