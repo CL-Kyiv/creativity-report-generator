@@ -21,7 +21,6 @@ function createWindow(): BrowserWindow {
       contextIsolation: false,  // false if you want to run e2e test with Spectron
     },
   });
-  win.webContents.openDevTools()
   if (serve) {
     const debug = require('electron-debug');
     debug();
@@ -32,9 +31,9 @@ function createWindow(): BrowserWindow {
     // Path when running electron executable
     let pathIndex = './index.html';
 
-    if (fs.existsSync(path.join(__dirname, '../src/index.html'))) {
+    if (fs.existsSync(path.join(__dirname, '../dist/index.html'))) {
       // Path when running electron in local folder
-      pathIndex = '../src/index.html';
+      pathIndex = '../dist/index.html';
     }
 
     win.loadURL(url.format({
