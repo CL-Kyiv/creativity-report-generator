@@ -1,8 +1,11 @@
 <div>
-    <label class = "" for="headerName">Enter header name:</label><br><br>
-    <input type="text" id="headerName"  #headerName name="headerName"><br><br>
+    <label class = "size-for-label" for="headerName">Enter header name:</label><br><br>
+    <input class = "size-for-input" type="text" id="headerName"  #headerName name="headerName">
+    <div *ngIf="!isValid" class="is-not-valid-header-name">
+        <span>This column already exists</span>
+    </div>
 </div>
-<div>
+<div class="button-div">
     <button class="button-add-column" (click)="onCreateColumn(headerName.value)">Create column</button>
     <button class="button-close-editind" (click)="onClose()">Cancel</button>
 </div>

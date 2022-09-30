@@ -10,7 +10,7 @@ namespace CreativityReportGenerator.WebAPI
 {
     public class Startup
     {
-        readonly string AllowAll = "_allowAllPolicyName";
+        readonly string AllowAll = "AllowOrigin";
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;

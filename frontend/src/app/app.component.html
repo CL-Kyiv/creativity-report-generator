@@ -1,63 +1,74 @@
-<div *ngIf="!isSelectServiceDialogOpen">
-  <form [formGroup]="getAuthorsForm" (ngSubmit)="onSelectPath(path.value, selectedDate.value)">
+<div *ngIf="!path" class="input-div">
+  <button title="Select repository directory" class="get-path-button" (click)="getDirectoryPath()">
+    Directory
+  </button>
+  <div *ngIf="!isGitRepo" class="is-not-git-repo">
+    <span>This folder isn't a git repository</span>
+  </div>
+</div>
+<div *ngIf="path" class="input-div">
+  <div>
+    <span>Repository - {{path}}</span>&nbsp;
+  </div>
+  <div>
+    <button title="If you want to select another repository" class="another-path-button" (click)="getDirectoryPath()">
+      Another directory
+    </button>
+  </div>
+</div>
+<form *ngIf="path" [formGroup]="getAuthorsForm" (ngSubmit)="onSelectPath(selectedDate.value)">
+  <div class="input-div">
+    <label for="date">Month and year:</label>&nbsp;
+    <input title="Select the month for which the report will be generated" type="month" required id="date" formControlName="selectedDate" [formControl] = "selectedDate">
+    <button class="button-get-authors" type="submit" [disabled]="!selectedDate || !path">Enter</button>
+    <span *ngIf="!isSelectedPath">  {{messageError}}</span>
+  </div>
+</form>
+<div *ngIf="isSelectedPath">
+  <form [formGroup]="generateForm" (ngSubmit)="onGenerate(selectedDate.value)">
     <div class="input-div">
-      <label for="date">Select month and year:</label>&nbsp;
-      <input type="month" required id="date" formControlName="selectedDate" [formControl] = "selectedDate">
+      Working hours: <input type="number" title="Select your working hours" required formControlName="startWorkingHours" [formControl] = "startWorkingHours" min="0" max="23" placeholder="0"> -
+          <input type="number" title="Select your working hours" required formControlName="endWorkingHours" [formControl] = "endWorkingHours" min="0" max="23" placeholder="0">
     </div>
 
-    <div class="input-div"> 
-      <label for="path">Enter path:</label>&nbsp;
-      <input type="text" required id="path" formControlName="path" #path name="path">
-      <button class="button-get-authors" type="submit" [disabled]="getAuthorsForm.invalid">Enter</button>
-      <span *ngIf="!isSelectedPath">  {{messageError}}</span>
-    </div>
+    <div class="input-div">
+      <div class="div-loader" *ngIf="isSelectAuthorsRequestInProgress">
+        <label for="loader">Author:</label>&nbsp;
+        <div class="loader" id="loader"></div>  
+      </div>
+      <div *ngIf="!isSelectAuthorsRequestInProgress">
+        <label for="author">Author:</label>&nbsp;
+        <select required title="Select author" formControlName="author" [formControl] = "author" id="author">
+          <option *ngFor="let author of allAuthors" [value]="author">{{author}})</option>
+        </select>
+      </div>
+    </div> 
+      <button class="button-generate" title="Generate creativity report items" type="submit" [disabled]="!author.value || !startWorkingHours.value || !endWorkingHours.value || !selectedDate.value || !path">Generate</button> 
   </form>
-  <div *ngIf="isSelectedPath">
-    <form [formGroup]="generateForm" (ngSubmit)="onGenerate(selectedDate.value, start.value, end.value)">
-      <div class="input-div">
-        Choose working hours: <input type="number" required formControlName="start" min="0" max="23" #start placeholder="0"> -
-            <input type="number" required formControlName="end" min="0" max="23" #end placeholder="0">
-      </div>
 
-      <div class="input-div">
-        <div class="div-loader" *ngIf="isSelectAuthorsRequestInProgress">
-          <label for="loader">Select author:</label>&nbsp;
-          <div class="loader" id="loader"></div>  
-        </div>
-        <div *ngIf="!isSelectAuthorsRequestInProgress">
-          <label for="author">Select author:</label>&nbsp;
-          <select required formControlName="author" [formControl] = "author" id="author">
-            <option *ngFor="let author of allAuthors" [value]="author">{{author}})</option>
-          </select>
-        </div>
-      </div> 
-        <button class="button-generate" type="submit" [disabled]="generateForm.invalid">Generate</button> 
-    </form>
+  <div *ngIf="isGenerate">
+    <div class="div-merge-commits-selection-changed">
+      <input class="checkbox-merge-commits-selection" type="checkbox"  id="mergeCommits" (change)="onHideMergeCommits($event)">
+      <label for="mergeCommits">Hide merge commits</label>
+    </div>
+    
+    <ag-grid-angular
+        class = "ag-theme-balham ag-grid"
+        [columnDefs] = "columnDefs"
+        [rowData] = "rowData"
+        [defaultColDef]= "defaultColDef"
+        [rowHeight] = "50"
+        [isExternalFilterPresent]= "isExternalFilterPresent"
+        [frameworkComponents]="frameworkComponents"
+        [doesExternalFilterPass]= "doesExternalFilterPass"
+        rowSelection="multiple"
+        [suppressRowClickSelection] = "true"
+        (gridReady) = "onGridReady($event)"
+    ></ag-grid-angular>
 
-    <div *ngIf="isGenerate">
-      <div class="div-merge-commits-selection-changed">
-        <input class="checkbox-merge-commits-selection" type="checkbox"  id="mergeCommits" (change)="onHideMergeCommits($event)">
-        <label for="mergeCommits">Hide merge commits</label>
-      </div>
-      
-      <ag-grid-angular
-          class = "ag-theme-balham ag-grid"
-          [columnDefs] = "columnDefs"
-          [rowData] = "rowData"
-          [defaultColDef]= "defaultColDef"
-          [rowHeight] = "50"
-          [isExternalFilterPresent]= "isExternalFilterPresent"
-          [frameworkComponents]="frameworkComponents"
-          [doesExternalFilterPass]= "doesExternalFilterPass"
-          rowSelection="multiple"
-          [suppressRowClickSelection] = "true"
-          (gridReady) = "onGridReady($event)"
-      ></ag-grid-angular>
-
-      <div>
-        <button class="button-create-column" (click)="openAddDialog()">Create new column</button>
-        <button class="button-export" (click)="onBtnExport()">Download CSV export file</button>
-      </div>
+    <div>
+      <button class="button-create-column" (click)="openAddDialog()">Create new column</button>
+      <button class="button-export" (click)="onBtnExport()">Export file</button>
     </div>
   </div>
 </div>

@@ -24,6 +24,8 @@ Thumbs.db
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 
+CreativityReportGenerator/
+
 *.exe
 *.pdb
 *.manifest

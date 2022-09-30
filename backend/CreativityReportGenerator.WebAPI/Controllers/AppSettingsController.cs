@@ -13,7 +13,7 @@ namespace CreativityReportGenerator.WebAPI.Controllers
     {
         private readonly IAppSettingsService _appSettingsService;
 
-        public AppSettingsController(IAppSettingsService appSettingsService, I)
+        public AppSettingsController(IAppSettingsService appSettingsService)
         {
             _appSettingsService = appSettingsService;
         }

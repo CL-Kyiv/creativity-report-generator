@@ -5,11 +5,42 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "type": "pwa-chrome",
+            "name": "Renderer",
+            "type": "chrome",
+            "request": "attach",
+            "port": 9876,
+            "url": "http://localhost:4200",
+            "sourceMaps": true,  
+            "timeout": 10000,
+            "trace": "verbose",
+            "sourceMapPathOverrides": {
+                "webpack:///./*": "${workspaceFolder}/*"
+            },
+            "preLaunchTask": "Build.Renderer"
+        },
+        {
+            "name": "Main",
+            "type": "node",
             "request": "launch",
-            "name": "Launch Chrome against localhost",
-            "url": "http://localhost:8080",
-            "webRoot": "${workspaceFolder}"
+            "protocol": "inspector",
+            "cwd": "${workspaceFolder}",
+            "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/electron",
+            "trace": "verbose",
+            "runtimeArgs": [
+                "--serve",
+                ".",
+                "--remote-debugging-port=9876"
+            ],
+            "windows": {
+                "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/electron.cmd"
+            },
+            "preLaunchTask": "Build.Main"
+        }
+    ],
+    "compounds": [
+        {
+            "name": "Application Debug",
+            "configurations": [ "Renderer", "Main" ]
         }
     ]
 }
