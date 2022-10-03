@@ -5,36 +5,11 @@ import {IDateAngularComp} from '@ag-grid-community/angular';
 import flatpickr from "flatpickr";
 
 @Component({
-   selector: 'app-custom-date',
-   template: `
-     <div #flatpickrEl class="ag-input-wrapper custom-date-filter" role="presentation">
-     <input type="text" #eInput data-input style="width: 100%;"/>
-     <a class='input-button' title='clear' data-clear>
-       <i class='fa fa-times'></i>
-     </a>
-     </div>
-   `,
-   styles: [        `
-           .custom-date-filter a {
-               position: absolute;
-               right: 20px;
-               color: rgba(0, 0, 0, 0.54);
-               cursor: pointer;
-           }
+    selector: 'app-custom-date',
+    templateUrl: './custom-date.component.html',
+    styleUrls: ['./custom-date.component.css']
+  })
 
-           .custom-date-filter:after { 
-               position: absolute;
-               content: '';
-               display: block;
-               font-weight: 400;
-               font-family: 'Font Awesome 5 Free';
-               right: 5px;
-               pointer-events: none;
-               color: rgba(0, 0, 0, 0.54);
-           }
-       `
-   ]
-})
 export class CustomDateComponent implements IDateAngularComp {
    @ViewChild("flatpickrEl", {read: ElementRef}) flatpickrEl: ElementRef;
    @ViewChild("eInput", {read: ElementRef}) eInput: ElementRef;

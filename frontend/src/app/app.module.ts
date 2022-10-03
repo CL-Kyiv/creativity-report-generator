@@ -10,7 +10,7 @@ import { AppComponent } from './app.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ColumnAddDialogComponent } from './column-add-dialog/column-add-dialog.component';
-import { CustomDateComponent } from './custom-date-component.component';
+import { CustomDateComponent } from './custom-date/custom-date.component';
 
 // NG Translate
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';

@@ -10,7 +10,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { CreativityReportGeneratorService } from './creativity-report-generator.service';
 import { ColumnAddDialogComponent } from './column-add-dialog/column-add-dialog.component';
 import { Author } from './author-type';
-import { CustomDateComponent } from './custom-date-component.component';
+import { CustomDateComponent } from './custom-date/custom-date.component';
 import { FormControl, FormBuilder } from '@angular/forms';
 import { CustomHeaderComponent } from './custom-header/custom-header.component';
 import { HeaderComponent } from '@ag-grid-community/core/dist/cjs/components/framework/componentTypes';
