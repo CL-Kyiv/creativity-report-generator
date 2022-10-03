@@ -72,14 +72,30 @@ namespace CreativityReportGenerator.Services
 
         public int CalculateCreativeTime(Commit com, Commit previousCom, int startWorkingHours, int endWorkingHours)
         {
-            int workingHoursPerDay;
-
             double hours = 0;
 
             if (com.Parents.Count() > 1)
             {
                 return (int)hours;
             }
+
+            int workingHoursPerDay = CalculateWorkingHoursPerDay(startWorkingHours, endWorkingHours);
+
+            if (previousCom == null)
+            { 
+                hours = workingHoursPerDay;
+            }
+            else
+            {
+                hours = GetTimeDifferenceBetweenCommits(com, previousCom, startWorkingHours, endWorkingHours);
+            }
+
+            return (int)Math.Round(hours / 2, MidpointRounding.AwayFromZero);
+        }
+
+        private int CalculateWorkingHoursPerDay(int startWorkingHours, int endWorkingHours)
+        {
+            int workingHoursPerDay;
 
             if (startWorkingHours <= endWorkingHours)
             {
@@ -90,45 +106,47 @@ namespace CreativityReportGenerator.Services
                 workingHoursPerDay = endWorkingHours + 24 - startWorkingHours;
             }
 
-            if (previousCom == null)
-            { 
-                hours = workingHoursPerDay;
+            return workingHoursPerDay;
+        }
+
+        private int GetTimeDifferenceBetweenCommits(Commit com, Commit previousCom, int startWorkingHours, int endWorkingHours)
+        {
+            int hours = 0;
+
+            var start = previousCom.Author.When;
+            var end = com.Author.When;
+
+            if (startWorkingHours <= endWorkingHours)
+            {
+                while (start < end)
+                {
+                    start = start.AddHours(1);
+                    if (start.Hour > startWorkingHours &&
+                       start.Hour <= endWorkingHours &&
+                       start.DayOfWeek != DayOfWeek.Saturday &&
+                       start.DayOfWeek != DayOfWeek.Sunday)
+                    {
+                        hours++;
+                    }
+                }
             }
             else
             {
-                var start = previousCom.Author.When;
-                var end = com.Author.When;
-                if(startWorkingHours <= endWorkingHours)
+                while (start < end)
                 {
-                    while (start < end)
+                    start = start.AddHours(1);
+                    if ((start.Hour > startWorkingHours &&
+                       start.Hour <= 24) || (start.Hour >= 0 &&
+                       start.Hour <= endWorkingHours) &&
+                       start.DayOfWeek != DayOfWeek.Saturday &&
+                       start.DayOfWeek != DayOfWeek.Sunday)
                     {
-                        start = start.AddHours(1);
-                        if (start.Hour > startWorkingHours &&
-                           start.Hour <= endWorkingHours &&
-                           start.DayOfWeek != DayOfWeek.Saturday &&
-                           start.DayOfWeek != DayOfWeek.Sunday)
-                        {
-                            hours++;
-                        }
-                    }
-                }
-                else
-                {
-                    while (start < end)
-                    {
-                        start = start.AddHours(1);
-                        if ((start.Hour > startWorkingHours &&
-                           start.Hour <= 24) || (start.Hour >= 0 &&
-                           start.Hour <= endWorkingHours) &&
-                           start.DayOfWeek != DayOfWeek.Saturday &&
-                           start.DayOfWeek != DayOfWeek.Sunday)
-                        {
-                            hours++;
-                        }
+                        hours++;
                     }
                 }
             }
-            return (int)Math.Round(hours / 2, MidpointRounding.AwayFromZero);
+
+            return hours;
         }
 
         private List<Commit> GetCommitsByDate(Repository repo, DateTime date)

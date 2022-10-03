@@ -7,9 +7,9 @@ Application for automated generation of creativity reports from Git repositories
 
 ### _Desktop app:_
 
-0) Install ASP.NET Core 3.1 SDK
+0) Install [ASP.NET Core 3.1 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/3.1)
 
-1) Download the project repository from latest release branch to your computer
+1) Download the project repository from latest [release](https://github.com/CL-Kyiv/creativity-report-generator/releases/tag/v1.0.0) to your computer
 
 2) Run the _./CreativityReportGenerator/run.bat_ file.
 
@@ -37,3 +37,7 @@ This file is a script that runs the web api and electron application in differen
 ├──electron                                 * electron application build files
 ├──run.bat                                  * script to run the application
 ```
+## Technologies
+* Electron
+* Angular
+* ASP.NET Core web API
