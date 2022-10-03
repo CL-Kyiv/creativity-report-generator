@@ -168,6 +168,8 @@ AutoTest.Net/
 # Web workbench (sass)
 .sass-cache/
 
+fronend/package-lock.json
+
 # Installshield output folder
 [Ee]xpress/
 
