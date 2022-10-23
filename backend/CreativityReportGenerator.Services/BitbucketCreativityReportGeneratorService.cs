@@ -1,13 +1,16 @@
 ﻿using CreativityReportGenerator.Services.Abstractions;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Linq;
 using SharpBucket.V2;
 using CreativityReportGenerator.Core.Models;
 
 namespace CreativityReportGenerator.Services
 {
+    /// <summary>
+    /// Bitbucket creativity report genaratorService.
+    /// </summary>
+    /// <seealso cref="ICreativityReportGeneratorService" />
     public class BitbucketCreativityReportGeneratorService : ICreativityReportGeneratorService
     {
         public string CurrentService => nameof(BitbucketCreativityReportGeneratorService);
@@ -26,6 +29,12 @@ namespace CreativityReportGenerator.Services
 
         }
 
+        /// <summary>
+        /// Gets commits by date.
+        /// </summary>
+        /// <param name="repo">The repository.</param>
+        /// <param name="date">The date of creativity report.</param>
+        /// <returns>Commits.</returns>
         private List<SharpBucket.V2.Pocos.Commit> GetCommitsByDate(SharpBucket.V2.EndPoints.RepositoryResource repo, DateTime date)
         {
             DateTime startDate = new DateTime(date.Year, date.Month, 1);
@@ -63,6 +72,13 @@ namespace CreativityReportGenerator.Services
                     }).ToList();
         }
 
+        /// <summary>
+        /// Gets commits by author and date.
+        /// </summary>
+        /// <param name="repo">The repository.</param>
+        /// <param name="date">The date of creativity report.</param>
+        /// <param name="userName">The author.</param>
+        /// <returns>Commits.</returns>
         private List<SharpBucket.V2.Pocos.Commit> GetAllCommitsByAuthorAndDate(SharpBucket.V2.EndPoints.RepositoryResource repo, DateTime date, string userName)
         {
             var commitsByDate = GetCommitsByDate(repo, date);
@@ -88,6 +104,14 @@ namespace CreativityReportGenerator.Services
                     .ToList();
         }
 
+        /// <summary>
+        /// Calculate creative time.
+        /// </summary>
+        /// <param name="com">Current commit.</param>
+        /// <param name="previousCom">Previous commit.</param>
+        /// <param name="startWorkingHours">Working day start time.</param>
+        /// <param name="endWorkingHours">Working day end time.</param>
+        /// <returns>Creative time.</returns>
         public int CalculateCreativeTime(SharpBucket.V2.Pocos.Commit com, SharpBucket.V2.Pocos.Commit previousCom, int startWorkingHours, int endWorkingHours)
         {
             double hours = 0;
@@ -97,20 +121,64 @@ namespace CreativityReportGenerator.Services
                 return (int)hours;
             }
 
+            int workingHoursPerDay = CalculateWorkingTimePerDay(startWorkingHours, endWorkingHours);
+
             if (previousCom == null)
             {
-                hours = endWorkingHours - startWorkingHours;
+                hours = workingHoursPerDay;
             }
             else
             {
-                var start = Convert.ToDateTime(previousCom.date);
-                var end = Convert.ToDateTime(com.date);
+                hours = GetTimeDifferenceBetweenCommits(com, previousCom, startWorkingHours, endWorkingHours);
+            }
 
+            return (int)Math.Round(hours / 2, MidpointRounding.AwayFromZero);
+        }
+
+        /// <summary>
+        /// Calculate working time per day.
+        /// </summary>
+        /// <param name="startWorkingHours">Working day start time.</param>
+        /// <param name="endWorkingHours">Working day end time.</param>
+        /// <returns>Working time per day.</returns>
+        private int CalculateWorkingTimePerDay(int startWorkingHours, int endWorkingHours)
+        {
+            int workingHoursPerDay;
+
+            if (startWorkingHours <= endWorkingHours)
+            {
+                workingHoursPerDay = endWorkingHours - startWorkingHours;
+            }
+            else
+            {
+                workingHoursPerDay = endWorkingHours + 24 - startWorkingHours;
+            }
+
+            return workingHoursPerDay;
+        }
+
+        /// <summary>
+        /// Get time difference between commits.
+        /// </summary>
+        /// <param name="com">Current commit.</param>
+        /// <param name="previousCom">Previous commit.</param>
+        /// <param name="startWorkingHours">Working day start time.</param>
+        /// <param name="endWorkingHours">Working day end time.</param>
+        /// <returns>Time difference between commits.</returns>
+        private int GetTimeDifferenceBetweenCommits(SharpBucket.V2.Pocos.Commit com, SharpBucket.V2.Pocos.Commit previousCom, int startWorkingHours, int endWorkingHours)
+        {
+            int hours = 0;
+
+            var start = Convert.ToDateTime(previousCom.date);
+            var end = Convert.ToDateTime(com.date);
+
+            if (startWorkingHours <= endWorkingHours)
+            {
                 while (start < end)
                 {
                     start = start.AddHours(1);
                     if (start.Hour > startWorkingHours &&
-                       start.Hour < endWorkingHours &&
+                       start.Hour <= endWorkingHours &&
                        start.DayOfWeek != DayOfWeek.Saturday &&
                        start.DayOfWeek != DayOfWeek.Sunday)
                     {
@@ -118,7 +186,23 @@ namespace CreativityReportGenerator.Services
                     }
                 }
             }
-            return (int)Math.Round(hours / 2, MidpointRounding.AwayFromZero);
+            else
+            {
+                while (start < end)
+                {
+                    start = start.AddHours(1);
+                    if ((start.Hour > startWorkingHours &&
+                       start.Hour <= 24) || (start.Hour >= 0 &&
+                       start.Hour <= endWorkingHours) &&
+                       start.DayOfWeek != DayOfWeek.Saturday &&
+                       start.DayOfWeek != DayOfWeek.Sunday)
+                    {
+                        hours++;
+                    }
+                }
+            }
+
+            return hours;
         }
     }
 }

@@ -1,12 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace CreativityReportGenerator.WebAPI
+﻿namespace CreativityReportGenerator.WebAPI
 {
+    /// <summary>
+    /// The AppSettings class.
+    /// </summary>
     public class AppSettings
     {
+        /// <summary>
+        /// Gets and sets the current service.
+        /// </summary>
+        /// <value>
+        /// The current service.
+        /// </value>
         public string CurrentService { get; set; }
     }
 }

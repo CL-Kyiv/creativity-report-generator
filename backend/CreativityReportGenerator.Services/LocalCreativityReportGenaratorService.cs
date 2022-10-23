@@ -7,6 +7,10 @@ using System.Linq;
 
 namespace CreativityReportGenerator.Services
 {
+    /// <summary>
+    /// Local creativity report genaratorService.
+    /// </summary>
+    /// <seealso cref="ICreativityReportGeneratorService" />
     public class LocalCreativityReportGenaratorService : ICreativityReportGeneratorService
     {
         public string CurrentService => nameof(LocalCreativityReportGenaratorService);
@@ -58,6 +62,13 @@ namespace CreativityReportGenerator.Services
             }
         }
 
+        /// <summary>
+        /// Gets commits by author and date.
+        /// </summary>
+        /// <param name="repo">The repository.</param>
+        /// <param name="date">The date of creativity report.</param>
+        /// <param name="userName">The author.</param>
+        /// <returns>Commits.</returns>
         private List<Commit> GetAllCommitsByAuthorAndDate(Repository repo, DateTime date, string userName)
         {
             var commitsByDate = GetCommitsByDate(repo, date);
@@ -70,6 +81,14 @@ namespace CreativityReportGenerator.Services
                 .ToList();
         }
 
+        /// <summary>
+        /// Calculate creative time.
+        /// </summary>
+        /// <param name="com">Current commit.</param>
+        /// <param name="previousCom">Previous commit.</param>
+        /// <param name="startWorkingHours">Working day start time.</param>
+        /// <param name="endWorkingHours">Working day end time.</param>
+        /// <returns>Creative time.</returns>
         public int CalculateCreativeTime(Commit com, Commit previousCom, int startWorkingHours, int endWorkingHours)
         {
             double hours = 0;
@@ -79,7 +98,7 @@ namespace CreativityReportGenerator.Services
                 return (int)hours;
             }
 
-            int workingHoursPerDay = CalculateWorkingHoursPerDay(startWorkingHours, endWorkingHours);
+            int workingHoursPerDay = CalculateWorkingTimePerDay(startWorkingHours, endWorkingHours);
 
             if (previousCom == null)
             { 
@@ -90,10 +109,16 @@ namespace CreativityReportGenerator.Services
                 hours = GetTimeDifferenceBetweenCommits(com, previousCom, startWorkingHours, endWorkingHours);
             }
 
-            return (int)Math.Round(hours / 2, MidpointRounding.AwayFromZero);
+            return (int)Math.Round(hours / 2, MidpointRounding.AwayFromZero);  
         }
 
-        private int CalculateWorkingHoursPerDay(int startWorkingHours, int endWorkingHours)
+        /// <summary>
+        /// Calculate working time per day.
+        /// </summary>
+        /// <param name="startWorkingHours">Working day start time.</param>
+        /// <param name="endWorkingHours">Working day end time.</param>
+        /// <returns>Working time per day.</returns>
+        private int CalculateWorkingTimePerDay(int startWorkingHours, int endWorkingHours)
         {
             int workingHoursPerDay;
 
@@ -109,6 +134,14 @@ namespace CreativityReportGenerator.Services
             return workingHoursPerDay;
         }
 
+        /// <summary>
+        /// Get time difference between commits.
+        /// </summary>
+        /// <param name="com">Current commit.</param>
+        /// <param name="previousCom">Previous commit.</param>
+        /// <param name="startWorkingHours">Working day start time.</param>
+        /// <param name="endWorkingHours">Working day end time.</param>
+        /// <returns>Time difference between commits.</returns>
         private int GetTimeDifferenceBetweenCommits(Commit com, Commit previousCom, int startWorkingHours, int endWorkingHours)
         {
             int hours = 0;
@@ -149,6 +182,12 @@ namespace CreativityReportGenerator.Services
             return hours;
         }
 
+        /// <summary>
+        /// Gets commits by date.
+        /// </summary>
+        /// <param name="repo">The repository.</param>
+        /// <param name="date">The date of creativity report.</param>
+        /// <returns>Commits.</returns>
         private List<Commit> GetCommitsByDate(Repository repo, DateTime date)
         {
             DateTime startDate = new DateTime(date.Year, date.Month, 1);

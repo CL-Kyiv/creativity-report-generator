@@ -1,9 +1,6 @@
 using System;
 using Xunit;
 using FluentAssertions;
-using System.IO;
-using System.Reflection;
-using System.Linq;
 using LibGit2Sharp;
 using Moq;
 using System.Collections.Generic;

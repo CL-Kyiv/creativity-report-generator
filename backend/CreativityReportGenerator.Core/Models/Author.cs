@@ -1,11 +1,26 @@
-﻿
-using System;
+﻿using System;
 
 namespace CreativityReportGenerator.Core.Models
 {
+    /// <summary>
+    /// Author.
+    /// </summary>
     public class Author : IEquatable<Author>
     {
+        /// <summary>
+        /// Gets or sets the author name.
+        /// </summary>
+        /// <value>
+        /// The author name.
+        /// </value>
         public string Name { get; set; }
+
+        /// <summary>
+        /// Gets or sets the author Email.
+        /// </summary>
+        /// <value>
+        /// The author Email.
+        /// </value>
         public string Email { get; set; }
 
         public bool Equals(Author other)
