@@ -15,7 +15,7 @@ namespace CreativityReportGenerator.Services
     {
         public string CurrentService => nameof(LocalCreativityReportGenaratorService);
 
-        public List<string> GetAllAuthors(string path, DateTime date)
+        public List<string> GetAllAuthors(string? path, string? repositoryName, string? consumerKey, string? consumerSecretKey, DateTime date)
         {
             using (var repo = new Repository(@$"{path}"))
             {
@@ -27,7 +27,15 @@ namespace CreativityReportGenerator.Services
             }
         }
 
-        public List<CreativityReportItem> GetCreativityReportItems(DateTime date, string userName, string path, int startWorkingHours, int endWorkingHours)
+        public List<CreativityReportItem> GetCreativityReportItems(
+            DateTime date,
+            string userName,
+            string? repositoryName,
+            string? path,
+            string? consumerKey,
+            string? consumerSecretKey,
+            int startWorkingHours,
+            int endWorkingHours)
         {
             using (var repo = new Repository(path))
             {
@@ -51,7 +59,13 @@ namespace CreativityReportGenerator.Services
             }
         }
 
-        public List<string> GetMergeCommitsIdsByAuthorAndDate(DateTime date, string userName, string path)
+        public List<string> GetMergeCommitsIdsByAuthorAndDate(
+            DateTime date,
+            string userName,
+            string? repositoryName,
+            string? path,
+            string? consumerKey,
+            string? consumerSecretKey)
         {
             using (var repo = new Repository(path))
             {
@@ -199,6 +213,11 @@ namespace CreativityReportGenerator.Services
                 .Where(com =>
                 com.Author.When >= startDate &&
                 com.Author.When <= endDate).ToList();
+        }
+
+        public List<string> GetAllRepositories(string consumerKey, string consumerSecretKey)
+        {
+            throw new NotImplementedException();
         }
     }
 }

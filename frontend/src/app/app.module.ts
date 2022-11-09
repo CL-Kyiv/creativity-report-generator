@@ -17,6 +17,9 @@ import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { CustomHeaderComponent } from './custom-header/custom-header.component';
 import { FontAwesomeModule  } from '@fortawesome/angular-fontawesome';
+import { BitbucketComponent } from './bitbucket/bitbucket.component';
+import { LocalComponent } from './local/local.component';
+import { BitbucketAuthorizationDialogComponent } from './bitbucket-authorization-dialog/bitbucket-authorization-dialog.component';
 
 // AoT requires an exported function for factories
 const httpLoaderFactory = (http: HttpClient): TranslateHttpLoader => new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -25,7 +28,10 @@ const httpLoaderFactory = (http: HttpClient): TranslateHttpLoader => new Transla
   declarations: [AppComponent,
     ColumnAddDialogComponent,
     CustomDateComponent,
-    CustomHeaderComponent],
+    CustomHeaderComponent,
+    BitbucketComponent,
+    LocalComponent,
+    BitbucketAuthorizationDialogComponent],
   imports: [
     BrowserModule,
     AgGridModule.withComponents([CustomDateComponent]),

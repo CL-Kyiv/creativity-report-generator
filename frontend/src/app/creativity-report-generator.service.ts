@@ -15,11 +15,22 @@ export class CreativityReportGeneratorService {
   
   constructor(private http: HttpClient) {}
 
-  getCreativityReportItems(date : string, userName :  string, path : string,  startWorkingHours : string, endWorkingHours : string): Observable<CreativityReportItem[]> {
+  getCreativityReportItems(
+    date : string, 
+    userName :  string,
+    repositoryName : string, 
+    consumerKey : string, 
+    consumerSecretKey : string,  
+    path : string,  
+    startWorkingHours : string, 
+    endWorkingHours : string): Observable<CreativityReportItem[]> {
     let body = new HttpParams({
       fromObject : {
         'date' : date,
         'userName' : userName,
+        'repositoryName' : repositoryName,
+        'consumerKey' : consumerKey,
+        'consumerSecretKey' : consumerSecretKey,
         'path' : path,
         'startWorkingHours' : startWorkingHours,
         'endWorkingHours' : endWorkingHours
@@ -29,10 +40,29 @@ export class CreativityReportGeneratorService {
     return this.http.get<CreativityReportItem[]>(this.APIUrl, { params: body, responseType: 'json'} );
   }
 
-  getAllAuthors(path : string, date : string): Observable<string[]> {
+  getAllRepositories(consumerKey : string, consumerSecretKey : string): Observable<string[]> {
+    let body = new HttpParams({
+      fromObject : {
+        'consumerKey' : consumerKey,
+        'consumerSecretKey' : consumerSecretKey
+      }
+    })
+
+    return this.http.get<string[]>(this.APIUrl + '/repositories', { params: body, responseType: 'json'} );
+  }
+
+  getAllAuthors(
+    path : string, 
+    repositoryName : string, 
+    consumerKey : string, 
+    consumerSecretKey : string, 
+    date : string): Observable<string[]> {
     let body = new HttpParams({
       fromObject : {
         'path' : path,
+        'repositoryName' : repositoryName,
+        'consumerKey' : consumerKey,
+        'consumerSecretKey' : consumerSecretKey,
         'date' : date
       }
     })
@@ -40,11 +70,20 @@ export class CreativityReportGeneratorService {
     return this.http.get<string[]>(this.APIUrl + '/authors', { params: body, responseType: 'json'} );
   }
 
-  getMergeCommitsByAuthorAndDate(date : string, userName :  string, path : string): Observable<string[]> {
+  getMergeCommitsByAuthorAndDate(
+    date : string, 
+    userName :  string, 
+    repositoryName : string, 
+    consumerKey : string, 
+    consumerSecretKey : string,  
+    path : string): Observable<string[]> {
     let body = new HttpParams({
       fromObject : {
         'date' : date,
         'userName' : userName,
+        'repositoryName' : repositoryName,
+        'consumerKey' : consumerKey,
+        'consumerSecretKey' : consumerSecretKey,
         'path' : path
       }
     })

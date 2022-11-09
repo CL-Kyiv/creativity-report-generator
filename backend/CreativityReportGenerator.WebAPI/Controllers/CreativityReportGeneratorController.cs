@@ -38,17 +38,26 @@ namespace CreativityReportGenerator.WebAPI.Controllers
         /// <param name="date">The date of creativity report.</param>
         /// <returns>Authors.</returns>
         [HttpGet("authors")]
-        public IActionResult GetAllAuthors(string path, DateTime date)
+        public IActionResult GetAllAuthors(string? path, string? repositoryName, string? consumerKey, string? consumerSecretKey, DateTime date)
         {
-            if (!Directory.Exists(path))
-            {
-                return BadRequest("wrong path");
-            }
-            
             return Ok(_creativityReportGeneratorServices
                 .FirstOrDefault(s => s.CurrentService == AppSettings.CurrentService)
-                .GetAllAuthors(path, date));
+                .GetAllAuthors(path, repositoryName, consumerKey, consumerSecretKey, date));
         }
+
+        /// <summary>
+        /// Gets the authors.
+        /// </summary>
+        /// <param name="path">The path to repository.</param>
+        /// <param name="date">The date of creativity report.</param>
+        /// <returns>Authors.</returns>
+        [HttpGet("repositories")]
+        public IActionResult GetAllRepositories(string? consumerKey, string? consumerSecretKey)
+        {
+            return Ok(_creativityReportGeneratorServices
+                .FirstOrDefault(s => s.CurrentService == AppSettings.CurrentService)
+                .GetAllRepositories(consumerKey, consumerSecretKey));
+        }   
 
         /// <summary>
         /// Gets the merge commits Ids.
@@ -58,11 +67,17 @@ namespace CreativityReportGenerator.WebAPI.Controllers
         /// <param name="path">The path to repository.</param>
         /// <returns>Merge commits Ids.</returns>
         [HttpGet("mergeCommits")]
-        public IActionResult GetMergeCommits(DateTime date, string userName, string path)
+        public IActionResult GetMergeCommits(
+            DateTime date,
+            string userName,
+            string? repositoryName,
+            string? path,
+            string? consumerKey,
+            string? consumerSecretKey)
         {
             return Ok(_creativityReportGeneratorServices
                 .FirstOrDefault(s => s.CurrentService == AppSettings.CurrentService)
-                .GetMergeCommitsIdsByAuthorAndDate(date, userName, path));
+                .GetMergeCommitsIdsByAuthorAndDate(date, userName, repositoryName, path, consumerKey, consumerSecretKey));
         }
 
         /// <summary>
@@ -75,11 +90,19 @@ namespace CreativityReportGenerator.WebAPI.Controllers
         /// <param name="endWorkingHours">Working day end time.</param>
         /// <returns>Creativity report items.</returns>
         [HttpGet]
-        public IActionResult GetCreativityReportItems(DateTime date, string userName, string path, int startWorkingHours, int endWorkingHours)
+        public IActionResult GetCreativityReportItems(
+            DateTime date,
+            string userName,
+            string? repositoryName,
+            string? path,
+            string? consumerKey,
+            string? consumerSecretKey,
+            int startWorkingHours,
+            int endWorkingHours)
         {
             return Ok(_creativityReportGeneratorServices
                 .FirstOrDefault(s => s.CurrentService == AppSettings.CurrentService)
-                .GetCreativityReportItems(date, userName, path, startWorkingHours, endWorkingHours));
+                .GetCreativityReportItems(date, userName, repositoryName, path, consumerKey, consumerSecretKey, startWorkingHours, endWorkingHours));
         }
     }
 }
