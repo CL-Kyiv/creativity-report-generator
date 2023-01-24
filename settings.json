@@ -1,6 +1,6 @@
 {
     "currentService": {
-      "service": "Bitbucket"
+      "isBitbucket": true
     }
 }
   

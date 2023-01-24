@@ -10,10 +10,14 @@ namespace CreativityReportGenerator.Services
     /// <summary>
     /// Bitbucket creativity report genaratorService.
     /// </summary>
-    /// <seealso cref="ICreativityReportGeneratorService" />
-    public class BitbucketCreativityReportGeneratorService : ICreativityReportGeneratorService
+    /// <seealso cref="IBitbucketCreativityReportGeneratorService" />
+    public class BitbucketCreativityReportGeneratorService : IBitbucketCreativityReportGeneratorService
     {
-        public string CurrentService => nameof(BitbucketCreativityReportGeneratorService);
+        public void TryAuthorization(string consumerKey, string consumerSecretKey)
+        {
+            var sharpBucket = new SharpBucketV2();
+            sharpBucket.OAuth2ClientCredentials(consumerKey, consumerSecretKey);
+        }
 
         public List<string> GetAllRepositories(string consumerKey, string consumerSecretKey)
         {
@@ -29,10 +33,9 @@ namespace CreativityReportGenerator.Services
                 .OrderBy(repo => repo.name)
                 .Select(repo => repo.name)
                 .ToList();
-
         }
 
-        public List<string> GetAllAuthors(string? path, string? repositoryName, string? consumerKey, string? consumerSecretKey, DateTime date)
+        public List<string> GetAllAuthors(string repositoryName, string consumerKey, string consumerSecretKey, DateTime date)
         {
             var sharpBucket = new SharpBucketV2();
             sharpBucket.OAuth2ClientCredentials(consumerKey, consumerSecretKey);
@@ -69,8 +72,7 @@ namespace CreativityReportGenerator.Services
         public List<CreativityReportItem> GetCreativityReportItems(
             DateTime date, 
             string userName, 
-            string? repositoryName, 
-            string? path, 
+            string? repositoryName,
             string? consumerKey, 
             string? consumerSecretKey, 
             int startWorkingHours, 
@@ -126,7 +128,6 @@ namespace CreativityReportGenerator.Services
             DateTime date,
             string userName,
             string? repositoryName,
-            string? path,
             string? consumerKey,
             string? consumerSecretKey)
         {

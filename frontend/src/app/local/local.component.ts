@@ -1,4 +1,4 @@
-import { ElectronService } from '../core/services';
+import { ElectronService } from '../common/core/services';
 import { TranslateService } from '@ngx-translate/core';
 import { APP_CONFIG } from '../../environments/environment';
 import { Component, NgZone, ElementRef } from '@angular/core';
@@ -7,12 +7,11 @@ import { filter, Observable, map, catchError, of } from 'rxjs';
 import { GridApi } from 'ag-grid-community';
 import { CreativityReportItem } from '../creativity-report-item';
 import { MatDialog } from '@angular/material/dialog';
-import { CreativityReportGeneratorService } from '../creativity-report-generator.service';
-import { ColumnAddDialogComponent } from '../column-add-dialog/column-add-dialog.component';
-import { Author } from '../author-type';
-import { CustomDateComponent } from '../custom-date/custom-date.component';
+import { LocalCreativityReportGeneratorService } from './local-creativity-report-generator.service';
+import { ColumnAddDialogComponent } from '../common/column-add-dialog/column-add-dialog.component';
+import { CustomDateComponent } from '../common/custom-date/custom-date.component';
 import { FormControl, FormBuilder } from '@angular/forms';
-import { CustomHeaderComponent } from '../custom-header/custom-header.component';
+import { CustomHeaderComponent } from '../common/custom-header/custom-header.component';
 import { HeaderComponent } from '@ag-grid-community/core/dist/cjs/components/framework/componentTypes';
 
 @Component({
@@ -56,7 +55,7 @@ export class LocalComponent {
     private electronService: ElectronService,
     private ngZone: NgZone,
     private translate: TranslateService,
-    private service: CreativityReportGeneratorService,
+    private service: LocalCreativityReportGeneratorService,
     private matDialog: MatDialog,
     private formBuilder: FormBuilder) {
     this.electronService.ipcRenderer.on('file', (event, file, isGitRepo) => {
@@ -193,7 +192,7 @@ export class LocalComponent {
     this.isSelectedPath = true;
     this.isSelectAuthorsRequestInProgress = true;
     this.service
-      .getAllAuthors(this.path, null, null, null, date)
+      .getAllAuthors(this.path, date)
       .pipe(
         catchError(error => {
           this.messageError = error.error;
@@ -216,9 +215,6 @@ export class LocalComponent {
     this.service.getCreativityReportItems(
       date, 
       this.author.value,
-      null,
-      null,
-      null, 
       this.path, 
       this.startWorkingHours.value, 
       this.endWorkingHours.value).subscribe(
@@ -227,7 +223,7 @@ export class LocalComponent {
           if(this.gridApi)
             this.gridApi.hideOverlay()});
 
-    this.service.getMergeCommitsByAuthorAndDate(date, this.author.value, null, null, null, this.path).subscribe(ids => {
+    this.service.getMergeCommitsByAuthorAndDate(date, this.author.value, this.path).subscribe(ids => {
       this.mergeCommitsIds = ids;
     });
 

@@ -7,11 +7,11 @@ import { Component} from '@angular/core';
 })
 export class AppComponent {
   
-  settings = require('../../settings.json');
-  currentService : string
+  settings = require('../../../settings.json');
+  isBitbucket : boolean
 
   ngOnInit() {
-    this.currentService = this.settings.currentService.service;
+    this.isBitbucket = this.settings.currentService.isBitbucket;
   }
 
 }

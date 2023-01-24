@@ -5,21 +5,18 @@ using System.Collections.Generic;
 namespace CreativityReportGenerator.Services.Abstractions
 {
     /// <summary>
-    /// Creativity report generator service
+    /// Bitbucket Creativity report generator service
     /// </summary>
-    public interface ICreativityReportGeneratorService
+    public interface IBitbucketCreativityReportGeneratorService
     {
-        /// <summary>
-        /// Gets current service.
-        /// </summary>
-        string CurrentService { get; }
-
         /// <summary>
         /// Gets creativity report items.
         /// </summary>
         /// <param name="date">The date of creativity report.</param>
         /// <param name="userName">The author.</param>
-        /// <param name="path">The path to repository.</param>
+        /// <param name="repositoryName">The repository name.</param>
+        /// <param name="consumerKey">The consumer key.</param>
+        /// <param name="consumerSecretKey">The consumer secret key.</param>
         /// <param name="startWorkingHours">Working day start time.</param>
         /// <param name="endWorkingHours">Working day end time.</param>
         /// <returns>Creativity report items.</returns>
@@ -27,7 +24,6 @@ namespace CreativityReportGenerator.Services.Abstractions
             DateTime date,
             string userName,
             string? repositoryName,
-            string? path,
             string? consumerKey,
             string? consumerSecretKey,
             int startWorkingHours,
@@ -36,31 +32,41 @@ namespace CreativityReportGenerator.Services.Abstractions
         /// <summary>
         /// Gets the authors.
         /// </summary>
-        /// <param name="path">The path to repository.</param>
+        /// <param name="repositoryName">The repository name.</param>
+        /// <param name="consumerKey">The consumer key.</param>
+        /// <param name="consumerSecretKey">The consumer secret key.</param>
         /// <param name="date">The date of creativity report.</param>
         /// <returns>Authors.</returns>
-        List<string> GetAllAuthors(string? path, string? repositoryName, string? consumerKey, string? consumerSecretKey, DateTime date);
+        List<string> GetAllAuthors(string? repositoryName, string? consumerKey, string? consumerSecretKey, DateTime date);
 
         /// <summary>
-        /// Gets the authors.
+        /// Gets the repositories.
         /// </summary>
-        /// <param name="path">The path to repository.</param>
-        /// <param name="date">The date of creativity report.</param>
-        /// <returns>Authors.</returns>
+        /// <param name="consumerKey">The consumer key.</param>
+        /// <param name="consumerSecretKey">The consumer secret key.</param>
+        /// <returns>Repositories.</returns>
         List<string> GetAllRepositories(string? consumerKey, string? consumerSecretKey);
+
+        /// <summary>
+        /// Try to authorization.
+        /// </summary>
+        /// <param name="consumerKey">The consumer key.</param>
+        /// <param name="consumerSecretKey">The consumer secret key.</param>
+        void TryAuthorization(string? consumerKey, string? consumerSecretKey);
 
         /// <summary>
         /// Gets the merge commits Ids.
         /// </summary>
-        /// <param name="date">The date of creativity report.</param>
+        /// <param name="repositoryName">The repository name.</param>
         /// <param name="userName">The author.</param>
-        /// <param name="path">The path to repository.</param>
+        /// <param name="consumerKey">The consumer key.</param>
+        /// <param name="consumerSecretKey">The consumer secret key.</param>
+        /// <param name="date">The date of creativity report.</param>
         /// <returns>Merge commits Ids.</returns>
         List<string> GetMergeCommitsIdsByAuthorAndDate(
             DateTime date,
             string userName,
             string? repositoryName,
-            string? path,
             string? consumerKey,
             string? consumerSecretKey);
     }

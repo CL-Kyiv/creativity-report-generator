@@ -1,26 +1,22 @@
 import { Injectable } from '@angular/core';
 import { HttpParams, HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { CreativityReportItem } from './creativity-report-item';
-import { Author } from './author-type';
+import { CreativityReportItem } from '../creativity-report-item';
  
 @Injectable({
   providedIn: 'root',
 })
-export class CreativityReportGeneratorService {
+export class LocalCreativityReportGeneratorService {
   
-  config = require('./config/host.config.json');
+  config = require('../config/host.config.json');
 
-  readonly APIUrl = this.config.host.endpoint + 'CreativityReportGenerator';
+  readonly APIUrl = this.config.host.endpoint + 'LocalCreativityReportGenerator';
   
   constructor(private http: HttpClient) {}
 
   getCreativityReportItems(
     date : string, 
-    userName :  string,
-    repositoryName : string, 
-    consumerKey : string, 
-    consumerSecretKey : string,  
+    userName :  string,  
     path : string,  
     startWorkingHours : string, 
     endWorkingHours : string): Observable<CreativityReportItem[]> {
@@ -28,9 +24,6 @@ export class CreativityReportGeneratorService {
       fromObject : {
         'date' : date,
         'userName' : userName,
-        'repositoryName' : repositoryName,
-        'consumerKey' : consumerKey,
-        'consumerSecretKey' : consumerSecretKey,
         'path' : path,
         'startWorkingHours' : startWorkingHours,
         'endWorkingHours' : endWorkingHours
@@ -40,29 +33,12 @@ export class CreativityReportGeneratorService {
     return this.http.get<CreativityReportItem[]>(this.APIUrl, { params: body, responseType: 'json'} );
   }
 
-  getAllRepositories(consumerKey : string, consumerSecretKey : string): Observable<string[]> {
-    let body = new HttpParams({
-      fromObject : {
-        'consumerKey' : consumerKey,
-        'consumerSecretKey' : consumerSecretKey
-      }
-    })
-
-    return this.http.get<string[]>(this.APIUrl + '/repositories', { params: body, responseType: 'json'} );
-  }
-
   getAllAuthors(
     path : string, 
-    repositoryName : string, 
-    consumerKey : string, 
-    consumerSecretKey : string, 
     date : string): Observable<string[]> {
     let body = new HttpParams({
       fromObject : {
         'path' : path,
-        'repositoryName' : repositoryName,
-        'consumerKey' : consumerKey,
-        'consumerSecretKey' : consumerSecretKey,
         'date' : date
       }
     })
@@ -73,17 +49,11 @@ export class CreativityReportGeneratorService {
   getMergeCommitsByAuthorAndDate(
     date : string, 
     userName :  string, 
-    repositoryName : string, 
-    consumerKey : string, 
-    consumerSecretKey : string,  
     path : string): Observable<string[]> {
     let body = new HttpParams({
       fromObject : {
         'date' : date,
         'userName' : userName,
-        'repositoryName' : repositoryName,
-        'consumerKey' : consumerKey,
-        'consumerSecretKey' : consumerSecretKey,
         'path' : path
       }
     })

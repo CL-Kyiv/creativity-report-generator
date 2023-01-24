@@ -1,8 +1,8 @@
 <div>
-  <div *ngIf="currentService == 'Bitbucket'">
+  <div *ngIf="isBitbucket">
     <app-bitbucket></app-bitbucket>
   </div>
-  <div *ngIf="currentService == 'Local'">
+  <div *ngIf="!isBitbucket">
     <app-local></app-local>
   </div>
 </div>

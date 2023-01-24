@@ -6,13 +6,12 @@ import { filter, Observable, map, catchError, of } from 'rxjs';
 import { GridApi } from 'ag-grid-community';
 import { CreativityReportItem } from '../creativity-report-item';
 import { MatDialog } from '@angular/material/dialog';
-import { CreativityReportGeneratorService } from '../creativity-report-generator.service';
-import { ColumnAddDialogComponent } from '../column-add-dialog/column-add-dialog.component';
-import { Author } from '../author-type';
-import { CustomDateComponent } from '../custom-date/custom-date.component';
+import { BitbucketCreativityReportGeneratorService } from './bitbucket-creativity-report-generator.service';
+import { ColumnAddDialogComponent } from '../common/column-add-dialog/column-add-dialog.component';
+import { CustomDateComponent } from '../common/custom-date/custom-date.component';
 import { FormControl, FormBuilder } from '@angular/forms';
-import { CustomHeaderComponent } from '../custom-header/custom-header.component';
-import { BitbucketAuthorizationDialogComponent } from '../bitbucket-authorization-dialog/bitbucket-authorization-dialog.component';
+import { CustomHeaderComponent } from '../common/custom-header/custom-header.component';
+import { BitbucketAuthorizationDialogComponent } from './bitbucket-authorization-dialog/bitbucket-authorization-dialog.component';
 import { HeaderComponent } from '@ag-grid-community/core/dist/cjs/components/framework/componentTypes';
 
 @Component({
@@ -42,6 +41,7 @@ export class BitbucketComponent {
   allAuthors : string[];
   rowData: CreativityReportItem[];
   mergeCommitsIds: string[];
+  messageAuthorizationError : string;
 
   getAuthorsForm = this.formBuilder.group({
     selectedDate: this.selectedDate,
@@ -58,7 +58,7 @@ export class BitbucketComponent {
   constructor(
     private matDialog: MatDialog,
     private formBuilder: FormBuilder,
-    private service: CreativityReportGeneratorService) {
+    private service: BitbucketCreativityReportGeneratorService) {
       this.defaultColDef = {
         flex: 1,
         minWidth: 50,
@@ -172,7 +172,6 @@ export class BitbucketComponent {
       this.repository.value,
       this.consumerKey,
       this.consumerSecretKey,
-      null, 
       this.startWorkingHours.value, 
       this.endWorkingHours.value).subscribe(data => {
           this.rowData = data;
@@ -184,8 +183,7 @@ export class BitbucketComponent {
       this.author.value,
       this.repository.value,
       this.consumerKey,
-      this.consumerSecretKey, 
-      null).subscribe(ids => {
+      this.consumerSecretKey).subscribe(ids => {
       this.mergeCommitsIds = ids;
     });
 
@@ -203,6 +201,11 @@ export class BitbucketComponent {
     this.consumerSecretKey = consumerSecretKey;
     this.service
       .getAllRepositories(consumerKey, consumerSecretKey)
+      .pipe(
+        catchError(error => {
+          this.messageAuthorizationError = error.error;
+          return of([])
+        }))
       .subscribe(repositories => {
         this.allRepositories = repositories;
         this.isSelectRepositoriesRequestInProgress = false;
@@ -271,7 +274,7 @@ export class BitbucketComponent {
     this.isSelectedRepo = true;
     this.isSelectAuthorsRequestInProgress = true;
     this.service
-      .getAllAuthors(null, repository, this.consumerKey, this.consumerSecretKey, selectedDate)
+      .getAllAuthors(repository, this.consumerKey, this.consumerSecretKey, selectedDate)
       .subscribe(authors => {
         this.allAuthors = authors;
         this.isSelectAuthorsRequestInProgress = false; 
