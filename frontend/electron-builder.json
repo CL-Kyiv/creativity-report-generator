@@ -1,7 +1,7 @@
 {
   "asar": false,
   "directories": {
-    "output": "../CreativityReportGenerator/electronApp/electron"
+    "output": "../CreativityReportGenerator/localApp/electron"
   },
   "files": [
     "**/*", 
