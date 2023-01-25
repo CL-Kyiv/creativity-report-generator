@@ -1,0 +1,39 @@
+<div *ngIf="messageAuthorizationError">
+    <div>
+        <div class="input-div-ck">
+            <label class = "size-for-label" for="consumerKey">Enter consumer key:</label><br>
+            <input class = "size-for-input-red" type="text" id="consumerKey"  #consumerKey name="consumerKey">
+        </div>
+        <div class="input-div-csk">
+            <label class = "size-for-label" for="consumerSecretKey">Enter consumer secret key:</label><br>
+            <input class = "size-for-input-red" type="text" id="consumerSecretKey"  #consumerSecretKey name="consumerSecretKey">
+        </div>
+    </div>
+    <div class="button-div">
+        <button class="button-log-in" (click)="onLogIn(consumerKey.value, consumerSecretKey.value)">Log in</button>
+    </div>
+    <div class="messageError-div">
+        <span class="messageError-color">{{messageAuthorizationError}}</span>
+    </div>
+    <div class="messageError-div">
+        <span class="messageError-color">Please make sure that the consumer key and consumer secret key are correct and try again</span>
+    </div>
+</div>
+    
+<div *ngIf="!messageAuthorizationError">
+    <div>
+        <div class="input-div-ck">
+            <label class = "size-for-label" for="consumerKey">Enter consumer key:</label><br>
+            <input class = "size-for-input" type="text" id="consumerKey"  #consumerKey name="consumerKey">
+        </div>
+        <div class="input-div-csk">
+            <label class = "size-for-label" for="consumerSecretKey">Enter consumer secret key:</label><br>
+            <input class = "size-for-input" type="text" id="consumerSecretKey"  #consumerSecretKey name="consumerSecretKey">
+        </div>
+    </div>
+    <div class="button-div">
+        <button class="button-log-in" (click)="onLogIn(consumerKey.value, consumerSecretKey.value)">Log in</button>
+    </div>
+</div>
+    
+ 

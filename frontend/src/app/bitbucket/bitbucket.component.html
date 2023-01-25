@@ -1,0 +1,63 @@
+<form *ngIf="isAuthorized" [formGroup]="getAuthorsForm" (ngSubmit)="onGetAuthors(repository.value, selectedDate.value)">
+    <div class="input-div">
+        <div class="div-loader" *ngIf="isSelectRepositoriesRequestInProgress">
+            <label for="loader">Repository:</label>&nbsp;
+            <div class="loader" id="loader"></div>  
+        </div>
+        <div *ngIf="!isSelectRepositoriesRequestInProgress">
+            <label for="repository">Repository:</label>&nbsp;
+            <select required title="Select repository" formControlName="repository" [formControl] = "repository" id="repository">
+                <option *ngFor="let repository of allRepositories" [value]="repository">{{repository}}</option>
+            </select>
+        </div>
+    </div>
+    <div class="input-div">
+        <label for="date">Month and year:</label>&nbsp;
+        <input title="Select the month for which the report will be generated" type="month" required id="date" formControlName="selectedDate" [formControl] = "selectedDate">
+        <button class="button-get-authors" type="submit" [disabled]="!selectedDate.value || !repository.value">Enter</button>
+    </div>
+</form>
+<div *ngIf="isSelectedRepo">
+    <form [formGroup]="generateForm" (ngSubmit)="onGenerate(selectedDate.value)">
+        <div class="input-div">
+            Working hours: <input type="number" title="Select your working hours" required formControlName="startWorkingHours" [formControl] = "startWorkingHours" min="0" max="23" placeholder="0"> -
+            <input type="number" title="Select your working hours" required formControlName="endWorkingHours" [formControl] = "endWorkingHours" min="0" max="23" placeholder="0">
+        </div>
+        <div class="input-div">
+            <div class="div-loader" *ngIf="isSelectAuthorsRequestInProgress">
+                <label for="loader">Author:</label>&nbsp;
+                <div class="loader" id="loader"></div>  
+            </div>
+            <div *ngIf="!isSelectAuthorsRequestInProgress">
+                <label for="author">Author:</label>&nbsp;
+                <select required title="Select author" formControlName="author" [formControl] = "author" id="author">
+                    <option *ngFor="let author of allAuthors" [value]="author">{{author}})</option>
+                </select>
+            </div>
+        </div> 
+        <button class="button-generate" title="Generate creativity report items" type="submit" [disabled]="!author.value || !startWorkingHours.value || !endWorkingHours.value || !selectedDate.value || !repository.value">Generate</button> 
+    </form>
+    <div *ngIf="isGenerate">
+        <div class="div-merge-commits-selection-changed">
+            <input class="checkbox-merge-commits-selection" type="checkbox"  id="mergeCommits" (change)="onHideMergeCommits($event)">
+            <label for="mergeCommits">Hide merge commits</label>
+        </div>
+        <ag-grid-angular
+            class = "ag-theme-balham ag-grid"
+            [columnDefs] = "columnDefs"
+            [rowData] = "rowData"
+            [defaultColDef]= "defaultColDef"
+            [rowHeight] = "50"
+            [isExternalFilterPresent]= "isExternalFilterPresent"
+            [frameworkComponents]="frameworkComponents"
+            [doesExternalFilterPass]= "doesExternalFilterPass"
+            rowSelection="multiple"
+            [suppressRowClickSelection] = "true"
+            (gridReady) = "onGridReady($event)"
+        ></ag-grid-angular>
+        <div>
+            <button class="button-create-column" (click)="openAddDialog()">Create new column</button>
+            <button class="button-export" (click)="onBtnExport()">Export file</button>
+        </div>
+    </div>
+</div>

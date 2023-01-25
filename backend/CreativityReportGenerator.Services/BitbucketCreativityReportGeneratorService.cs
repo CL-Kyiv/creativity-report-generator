@@ -10,17 +10,40 @@ namespace CreativityReportGenerator.Services
     /// <summary>
     /// Bitbucket creativity report genaratorService.
     /// </summary>
-    /// <seealso cref="ICreativityReportGeneratorService" />
-    public class BitbucketCreativityReportGeneratorService : ICreativityReportGeneratorService
+    /// <seealso cref="IBitbucketCreativityReportGeneratorService" />
+    public class BitbucketCreativityReportGeneratorService : IBitbucketCreativityReportGeneratorService
     {
-        public string CurrentService => nameof(BitbucketCreativityReportGeneratorService);
-
-        public List<string> GetAllAuthors(string path, DateTime date)
+        public void TryAuthorization(string consumerKey, string consumerSecretKey)
         {
             var sharpBucket = new SharpBucketV2();
-            sharpBucket.OAuth2ClientCredentials("uBK78CejQr9ghaUrYL", "62DPtXaJQmP9cQTE3NUe6ScYWa9bUjRz");
+            sharpBucket.OAuth2ClientCredentials(consumerKey, consumerSecretKey);
+        }
+
+        public List<string> GetAllRepositories(string consumerKey, string consumerSecretKey)
+        {
+            var sharpBucket = new SharpBucketV2();
+            sharpBucket.OAuth2ClientCredentials(consumerKey, consumerSecretKey);
+
+            var user = sharpBucket.UserEndPoint().GetUser();
+
+            var repositories = sharpBucket.RepositoriesEndPoint()
+                .RepositoriesResource(user.username).ListRepositories();
+
+            return repositories
+                .OrderBy(repo => repo.name)
+                .Select(repo => repo.name)
+                .ToList();
+        }
+
+        public List<string> GetAllAuthors(string repositoryName, string consumerKey, string consumerSecretKey, DateTime date)
+        {
+            var sharpBucket = new SharpBucketV2();
+            sharpBucket.OAuth2ClientCredentials(consumerKey, consumerSecretKey);
+
+            var user = sharpBucket.UserEndPoint().GetUser();
+
             var repo = sharpBucket.RepositoriesEndPoint()
-                .RepositoriesResource("dinikul").RepositoryResource("test");
+                .RepositoriesResource(user.username).RepositoryResource(repositoryName);
             return GetCommitsByDate(repo, date)
                 .OrderBy(com => com.author.raw)
                 .Select(com => com.author.raw)
@@ -46,12 +69,22 @@ namespace CreativityReportGenerator.Services
                 Convert.ToDateTime(com.date) <= endDate).ToList();
         }
 
-        public List<CreativityReportItem> GetCreativityReportItems(DateTime date, string userName, string path, int startWorkingHours, int endWorkingHours)
+        public List<CreativityReportItem> GetCreativityReportItems(
+            DateTime date, 
+            string userName, 
+            string? repositoryName,
+            string? consumerKey, 
+            string? consumerSecretKey, 
+            int startWorkingHours, 
+            int endWorkingHours)
         {
             var sharpBucket = new SharpBucketV2();
-            sharpBucket.OAuth2ClientCredentials("uBK78CejQr9ghaUrYL", "62DPtXaJQmP9cQTE3NUe6ScYWa9bUjRz");
+            sharpBucket.OAuth2ClientCredentials(consumerKey, consumerSecretKey);
+
+            var user = sharpBucket.UserEndPoint().GetUser();
+
             var repo = sharpBucket.RepositoriesEndPoint()
-                .RepositoriesResource("dinikul").RepositoryResource("test");
+                .RepositoriesResource(user.username).RepositoryResource(repositoryName);
 
             var allCommits = GetAllCommitsByAuthorAndDate(repo, date, userName);
 
@@ -64,7 +97,7 @@ namespace CreativityReportGenerator.Services
                     {
                         StartDate = Convert.ToDateTime(com.date).ToString("yyyy-MM-dd"),
                         EndDate = Convert.ToDateTime(com.date).ToString("yyyy-MM-dd"),
-                        ProjectName = "test",
+                        ProjectName = repositoryName,
                         CommitId = com.hash,
                         Comment = com.message,
                         UserName = com.author.user.display_name,
@@ -91,12 +124,20 @@ namespace CreativityReportGenerator.Services
                 .ToList();
         }
 
-        public List<string> GetMergeCommitsIdsByAuthorAndDate(DateTime date, string userName, string path)
+        public List<string> GetMergeCommitsIdsByAuthorAndDate(
+            DateTime date,
+            string userName,
+            string? repositoryName,
+            string? consumerKey,
+            string? consumerSecretKey)
         {
             var sharpBucket = new SharpBucketV2();
-            sharpBucket.OAuth2ClientCredentials("uBK78CejQr9ghaUrYL", "62DPtXaJQmP9cQTE3NUe6ScYWa9bUjRz");
+            sharpBucket.OAuth2ClientCredentials(consumerKey, consumerSecretKey);
+
+            var user = sharpBucket.UserEndPoint().GetUser();
+
             var repo = sharpBucket.RepositoriesEndPoint()
-                .RepositoriesResource("dinikul").RepositoryResource("test");
+                .RepositoriesResource(user.username).RepositoryResource(repositoryName);
 
             return GetAllCommitsByAuthorAndDate(repo, date, userName)
                     .Where(com => com.parents.Count() > 1)

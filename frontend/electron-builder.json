@@ -1,10 +1,10 @@
 {
   "asar": false,
   "directories": {
-    "output": "../CreativityReportGenerator/electron/"
+    "output": "../CreativityReportGenerator/localApp/electron"
   },
   "files": [
-    "**/*",
+    "**/*", 
     "!**/*.ts",
     "!*.map",
     "!package.json",

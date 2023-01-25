@@ -1,0 +1,45 @@
+.button-log-in{
+    height: 35px; 
+    width:125px;
+}
+
+input{
+    font-size: 20px;
+}
+
+label{
+    font-size: 20px;
+}
+.size-for-lebel{
+    margin-top: 5%;
+}
+
+.size-for-input{
+    margin-top: 2%;
+}
+
+.size-for-input-red{
+    margin-top: 2%;
+    border-color: red;
+}
+
+.button-div{
+    margin-top: 4%;
+    text-align:  center;
+}
+.input-div-ck{
+    text-align:  center;
+    margin-top: 10%;
+}
+.input-div-csk{
+    text-align:  center;
+    margin-top: 3%;
+}
+.messageError-div{
+    margin-top: 2%;
+    text-align:  center;
+}
+
+.messageError-color{
+    color: red;
+}
