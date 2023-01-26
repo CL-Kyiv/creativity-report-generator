@@ -31,6 +31,40 @@ The app works with bitbucket (as a web app and as an electron app) and with loca
 
       If you chose to work with local repositories then run.bat file runs the web api and electron application in different windows.
 
+## How to work with the project
+1) Download the project repository to your computer.
+
+2) Open the settings.json file and change the isBitbucket field according to which application you want to work with.
+```bash
+{
+    "currentService": {
+      "isBitbucket": true ## to work with bitbucket repositories
+    }
+}
+```
+```bash
+{
+    "currentService": {
+      "isBitbucket": false ## to work with local repositories
+    }
+}
+```
+3) Go to the backend/ directory, open the project solution (CreativityReportGenerator.sln) and run it.
+
+4) Open a command prompt, go to the frontend/ directory and write the command data:
+```bash
+npm install
+```
+
+```bash
+npm run ng:serve ## if you want to run the application as a web app
+```
+```bash
+npm run start ## if you want to run the application as an electron app
+```
+
+> Remind you that application works with local repositories only as an electron app
+
 ## How to use the application to work with bitbucket repositories:
 
 1) Enter the consumer key and consumer secret key. To find or create them, follow the instructions in the ["Create a consumer" section](https://support.atlassian.com/bitbucket-cloud/docs/use-oauth-on-bitbucket-cloud/#:~:text=make%20API%20calls.-,Create%20a%20consumer,-OAuth%20needs%20a).
