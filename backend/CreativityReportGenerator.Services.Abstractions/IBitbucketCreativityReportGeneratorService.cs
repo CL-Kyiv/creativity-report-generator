@@ -23,9 +23,9 @@ namespace CreativityReportGenerator.Services.Abstractions
         List<CreativityReportItem> GetCreativityReportItems(
             DateTime date,
             string userName,
-            string? repositoryName,
-            string? consumerKey,
-            string? consumerSecretKey,
+            string repositoryName,
+            string consumerKey,
+            string consumerSecretKey,
             int startWorkingHours,
             int endWorkingHours);
 
@@ -37,7 +37,7 @@ namespace CreativityReportGenerator.Services.Abstractions
         /// <param name="consumerSecretKey">The consumer secret key.</param>
         /// <param name="date">The date of creativity report.</param>
         /// <returns>Authors.</returns>
-        List<string> GetAllAuthors(string? repositoryName, string? consumerKey, string? consumerSecretKey, DateTime date);
+        List<string> GetAllAuthors(string repositoryName, string consumerKey, string consumerSecretKey, DateTime date);
 
         /// <summary>
         /// Gets the repositories.
@@ -45,14 +45,14 @@ namespace CreativityReportGenerator.Services.Abstractions
         /// <param name="consumerKey">The consumer key.</param>
         /// <param name="consumerSecretKey">The consumer secret key.</param>
         /// <returns>Repositories.</returns>
-        List<string> GetAllRepositories(string? consumerKey, string? consumerSecretKey);
+        List<string> GetAllRepositories(string consumerKey, string consumerSecretKey);
 
         /// <summary>
         /// Try to authorization.
         /// </summary>
         /// <param name="consumerKey">The consumer key.</param>
         /// <param name="consumerSecretKey">The consumer secret key.</param>
-        void TryAuthorization(string? consumerKey, string? consumerSecretKey);
+        void TryAuthorization(string consumerKey, string consumerSecretKey);
 
         /// <summary>
         /// Gets the merge commits Ids.
@@ -66,8 +66,8 @@ namespace CreativityReportGenerator.Services.Abstractions
         List<string> GetMergeCommitsIdsByAuthorAndDate(
             DateTime date,
             string userName,
-            string? repositoryName,
-            string? consumerKey,
-            string? consumerSecretKey);
+            string repositoryName,
+            string consumerKey,
+            string consumerSecretKey);
     }
 }

@@ -20,7 +20,7 @@
     <div class="input-div">
         <label for="date">Month and year:</label>&nbsp;
         <input title="Select the month for which the report will be generated" type="month" required id="date" formControlName="selectedDate" [formControl] = "selectedDate">
-        <button class="button-get-authors" type="submit" [disabled]="!selectedDate || !path">Enter</button>
+        <button class="button-get-authors" type="submit" [disabled]="!selectedDate.value || !path">Enter</button>
         <span *ngIf="!isSelectedPath">  {{messageError}}</span>
     </div>
 </form>
@@ -55,6 +55,7 @@
             [rowData] = "rowData"
             [defaultColDef]= "defaultColDef"
             [rowHeight] = "50"
+            [tooltipShowDelay] = "1"
             [isExternalFilterPresent]= "isExternalFilterPresent"
             [frameworkComponents]="frameworkComponents"
             [doesExternalFilterPass]= "doesExternalFilterPass"

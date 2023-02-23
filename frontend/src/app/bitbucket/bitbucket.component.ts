@@ -153,10 +153,11 @@ export class BitbucketComponent {
     },
     {
       headerName : "Hours",
+      headerTooltip : "Time spent on work divided by 2",
       field : "hours",
-      minWidth : 50,
+      minWidth : 60,
       editable: true,
-      flex : 1
+      flex : 1.6
     },
   ];
 
