@@ -11,7 +11,7 @@ The app works with bitbucket (as a web app and as an electron app) and with loca
 
 0) Install [ASP.NET Core 3.1 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/3.1).
 
-1) Download the project repository from latest [release](https://github.com/CL-Kyiv/creativity-report-generator/releases/tag/v2.0.0) to your computer.
+1) Download the project repository from latest [release](https://github.com/CL-Kyiv/creativity-report-generator/releases/tag/v2.1.0) to your computer.
 
    ### Application structure:
 ```
