@@ -21,7 +21,7 @@ namespace CreativityReportGenerator.Services.Abstractions
         List<CreativityReportItem> GetCreativityReportItems(
             DateTime date,
             string userName,
-            string? path,
+            string path,
             int startWorkingHours,
             int endWorkingHours);
 
@@ -31,7 +31,7 @@ namespace CreativityReportGenerator.Services.Abstractions
         /// <param name="path">The path to repository.</param>
         /// <param name="date">The date of creativity report.</param>
         /// <returns>Authors.</returns>
-        List<string> GetAllAuthors(string? path, DateTime date);
+        List<string> GetAllAuthors(string path, DateTime date);
 
         /// <summary>
         /// Gets the merge commits Ids.
@@ -43,6 +43,6 @@ namespace CreativityReportGenerator.Services.Abstractions
         List<string> GetMergeCommitsIdsByAuthorAndDate(
             DateTime date,
             string userName,
-            string? path);
+            string path);
     }
 }

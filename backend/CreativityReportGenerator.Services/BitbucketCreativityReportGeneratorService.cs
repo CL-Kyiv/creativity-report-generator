@@ -11,7 +11,7 @@ namespace CreativityReportGenerator.Services
     /// Bitbucket creativity report genaratorService.
     /// </summary>
     /// <seealso cref="IBitbucketCreativityReportGeneratorService" />
-    public class BitbucketCreativityReportGeneratorService : IBitbucketCreativityReportGeneratorService
+    public class BitbucketCreativityReportGeneratorService : BaseCreativityReportGenaratorService, IBitbucketCreativityReportGeneratorService
     {
         public void TryAuthorization(string consumerKey, string consumerSecretKey)
         {
@@ -72,9 +72,9 @@ namespace CreativityReportGenerator.Services
         public List<CreativityReportItem> GetCreativityReportItems(
             DateTime date, 
             string userName, 
-            string? repositoryName,
-            string? consumerKey, 
-            string? consumerSecretKey, 
+            string repositoryName,
+            string consumerKey, 
+            string consumerSecretKey, 
             int startWorkingHours, 
             int endWorkingHours)
         {
@@ -127,9 +127,9 @@ namespace CreativityReportGenerator.Services
         public List<string> GetMergeCommitsIdsByAuthorAndDate(
             DateTime date,
             string userName,
-            string? repositoryName,
-            string? consumerKey,
-            string? consumerSecretKey)
+            string repositoryName,
+            string consumerKey,
+            string consumerSecretKey)
         {
             var sharpBucket = new SharpBucketV2();
             sharpBucket.OAuth2ClientCredentials(consumerKey, consumerSecretKey);
@@ -170,80 +170,10 @@ namespace CreativityReportGenerator.Services
             }
             else
             {
-                hours = GetTimeDifferenceBetweenCommits(com, previousCom, startWorkingHours, endWorkingHours);
+                hours = GetTimeDifferenceBetweenCommits(DateTimeOffset.Parse(com.date), DateTimeOffset.Parse(previousCom.date), startWorkingHours, endWorkingHours);
             }
 
             return (int)Math.Round(hours / 2, MidpointRounding.AwayFromZero);
-        }
-
-        /// <summary>
-        /// Calculate working time per day.
-        /// </summary>
-        /// <param name="startWorkingHours">Working day start time.</param>
-        /// <param name="endWorkingHours">Working day end time.</param>
-        /// <returns>Working time per day.</returns>
-        private int CalculateWorkingTimePerDay(int startWorkingHours, int endWorkingHours)
-        {
-            int workingHoursPerDay;
-
-            if (startWorkingHours <= endWorkingHours)
-            {
-                workingHoursPerDay = endWorkingHours - startWorkingHours;
-            }
-            else
-            {
-                workingHoursPerDay = endWorkingHours + 24 - startWorkingHours;
-            }
-
-            return workingHoursPerDay;
-        }
-
-        /// <summary>
-        /// Get time difference between commits.
-        /// </summary>
-        /// <param name="com">Current commit.</param>
-        /// <param name="previousCom">Previous commit.</param>
-        /// <param name="startWorkingHours">Working day start time.</param>
-        /// <param name="endWorkingHours">Working day end time.</param>
-        /// <returns>Time difference between commits.</returns>
-        private int GetTimeDifferenceBetweenCommits(SharpBucket.V2.Pocos.Commit com, SharpBucket.V2.Pocos.Commit previousCom, int startWorkingHours, int endWorkingHours)
-        {
-            int hours = 0;
-
-            var start = Convert.ToDateTime(previousCom.date);
-            var end = Convert.ToDateTime(com.date);
-
-            if (startWorkingHours <= endWorkingHours)
-            {
-                while (start < end)
-                {
-                    start = start.AddHours(1);
-                    if (start.Hour > startWorkingHours &&
-                       start.Hour <= endWorkingHours &&
-                       start.DayOfWeek != DayOfWeek.Saturday &&
-                       start.DayOfWeek != DayOfWeek.Sunday)
-                    {
-                        hours++;
-                    }
-                }
-            }
-            else
-            {
-                while (start < end)
-                {
-                    start = start.AddHours(1);
-                    if ((start.Hour > startWorkingHours &&
-                       start.Hour <= 24) || (start.Hour >= 0 &&
-                       start.Hour <= endWorkingHours) &&
-                       start.DayOfWeek != DayOfWeek.Saturday &&
-                       start.DayOfWeek != DayOfWeek.Sunday)
-                    {
-                        hours++;
-                    }
-                }
-            }
-
-            return hours;
         }
     }
 }

@@ -11,11 +11,10 @@ namespace CreativityReportGenerator.Services
     /// Local creativity report genaratorService.
     /// </summary>
     /// <seealso cref="ILocalCreativityReportGenaratorService" />
-    public class LocalCreativityReportGenaratorService : ILocalCreativityReportGenaratorService
+    public class LocalCreativityReportGenaratorService : BaseCreativityReportGenaratorService, ILocalCreativityReportGenaratorService
     {
-        public List<string> GetAllAuthors(string? path, DateTime date)
+        public List<string> GetAllAuthors(string path, DateTime date)
         {
-
             using (var repo = new Repository(@$"{path}"))
             {
                 return GetCommitsByDate(repo, date)
@@ -29,7 +28,7 @@ namespace CreativityReportGenerator.Services
         public List<CreativityReportItem> GetCreativityReportItems(
             DateTime date,
             string userName,
-            string? path,
+            string path,
             int startWorkingHours,
             int endWorkingHours)
         {
@@ -58,7 +57,7 @@ namespace CreativityReportGenerator.Services
         public List<string> GetMergeCommitsIdsByAuthorAndDate(
             DateTime date,
             string userName,
-            string? path)
+            string path)
         {
             using (var repo = new Repository(path))
             {
@@ -113,80 +112,10 @@ namespace CreativityReportGenerator.Services
             }
             else
             {
-                hours = GetTimeDifferenceBetweenCommits(com, previousCom, startWorkingHours, endWorkingHours);
+                hours = GetTimeDifferenceBetweenCommits(com.Author.When, previousCom.Author.When, startWorkingHours, endWorkingHours);
             }
 
             return (int)Math.Round(hours / 2, MidpointRounding.AwayFromZero);  
-        }
-
-        /// <summary>
-        /// Calculate working time per day.
-        /// </summary>
-        /// <param name="startWorkingHours">Working day start time.</param>
-        /// <param name="endWorkingHours">Working day end time.</param>
-        /// <returns>Working time per day.</returns>
-        private int CalculateWorkingTimePerDay(int startWorkingHours, int endWorkingHours)
-        {
-            int workingHoursPerDay;
-
-            if (startWorkingHours <= endWorkingHours)
-            {
-                workingHoursPerDay = endWorkingHours - startWorkingHours;
-            }
-            else
-            {
-                workingHoursPerDay = endWorkingHours + 24 - startWorkingHours;
-            }
-
-            return workingHoursPerDay;
-        }
-
-        /// <summary>
-        /// Get time difference between commits.
-        /// </summary>
-        /// <param name="com">Current commit.</param>
-        /// <param name="previousCom">Previous commit.</param>
-        /// <param name="startWorkingHours">Working day start time.</param>
-        /// <param name="endWorkingHours">Working day end time.</param>
-        /// <returns>Time difference between commits.</returns>
-        private int GetTimeDifferenceBetweenCommits(Commit com, Commit previousCom, int startWorkingHours, int endWorkingHours)
-        {
-            int hours = 0;
-
-            var start = previousCom.Author.When;
-            var end = com.Author.When;
-
-            if (startWorkingHours <= endWorkingHours)
-            {
-                while (start < end)
-                {
-                    start = start.AddHours(1);
-                    if (start.Hour > startWorkingHours &&
-                       start.Hour <= endWorkingHours &&
-                       start.DayOfWeek != DayOfWeek.Saturday &&
-                       start.DayOfWeek != DayOfWeek.Sunday)
-                    {
-                        hours++;
-                    }
-                }
-            }
-            else
-            {
-                while (start < end)
-                {
-                    start = start.AddHours(1);
-                    if ((start.Hour > startWorkingHours &&
-                       start.Hour <= 24) || (start.Hour >= 0 &&
-                       start.Hour <= endWorkingHours) &&
-                       start.DayOfWeek != DayOfWeek.Saturday &&
-                       start.DayOfWeek != DayOfWeek.Sunday)
-                    {
-                        hours++;
-                    }
-                }
-            }
-
-            return hours;
         }
 
         /// <summary>
@@ -206,11 +135,6 @@ namespace CreativityReportGenerator.Services
                 .Where(com =>
                 com.Author.When >= startDate &&
                 com.Author.When <= endDate).ToList();
-        }
-
-        public List<string> GetAllRepositories(string consumerKey, string consumerSecretKey)
-        {
-            throw new NotImplementedException();
         }
     }
 }
